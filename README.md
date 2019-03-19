@@ -1,1 +1,1 @@
-Git reozitorij za Android aplikacijo
+## Git repozitorij za Android aplikacijo
