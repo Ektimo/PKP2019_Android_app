@@ -113,17 +113,11 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 Uri contentURI = data.getData();
 
-                String selectedVideoPath = getPath(contentURI);
-                Log.d("path",selectedVideoPath);
-                saveVideoToInternalStorage(selectedVideoPath);
-
-/*
-                Intent intent1 = new Intent(MainActivity.this, Processing.class);
-
-                startActivity(intent1 );*/
+//                Intent intent1 = new Intent(MainActivity.this, Processing.class);
+//
+//                startActivity(intent1 );
                 Intent intent = new Intent(MainActivity.this, Processing.class);
-                String contentString = contentURI.toString();
-                intent.putExtra("videoURI", contentString);
+                intent.putExtra("videoURI", contentURI);
                 startActivity(intent);
 
             }
@@ -179,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public String getPath(Uri uri) {
+    public String  getPath(Uri uri) {
         String[] projection = { MediaStore.Video.Media.DATA };
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
