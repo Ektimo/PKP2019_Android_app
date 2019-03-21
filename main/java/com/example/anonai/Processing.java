@@ -1,29 +1,20 @@
 package com.example.anonai;
 
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
+
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Processing extends AppCompatActivity {
 
-    private int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +32,6 @@ public class Processing extends AppCompatActivity {
         //ArrayList<Bitmap> frameList;
         ArrayList<Bitmap> frameList = new ArrayList<>();
 
-        //String uri1 = "content://com.android.providers.media.documents/document/videos_bucket%3A-1739773001";
         // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         
