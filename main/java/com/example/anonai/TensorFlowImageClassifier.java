@@ -159,7 +159,7 @@ public class TensorFlowImageClassifier implements Classifier {
         }
         final ArrayList<Recognition> recognitions = new ArrayList<Recognition>();
         int recognitionsSize = Math.min(pq.size(), MAX_RESULTS);
-        for (int i = 0; i < recognitionsSize; ++i) {
+        for (int i = 0; i < recognitionsSize; i++) {
             recognitions.add(pq.poll());
         }
         TraceCompat.endSection(); // "recognizeImage"

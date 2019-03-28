@@ -17,6 +17,7 @@ import com.wonderkiln.camerakit.CameraView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -28,14 +29,10 @@ public class Processing extends AppCompatActivity {
     private static final String OUTPUT_NAME = "output";
 
     private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-    private static final String LABEL_FILE =
-            "file:///android_asset/imagenet_comp_graph_label_strings.txt";
+    private static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
 
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
-    private TextView textViewResult;
-
-    private ImageView imageViewResult;
     private CameraView cameraView;
 
 
@@ -69,16 +66,34 @@ public class Processing extends AppCompatActivity {
         String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
         int duration_second = duration_millisec / 1000;  //millisec to sec.
-        int frames_per_second = 2;  //no. of frames want to retrieve per second
+        int frames_per_second = 1;  //no. of frames want to retrieve per second
         int numeroFrameCaptured = frames_per_second * duration_second;
         for (int i = 0; i < numeroFrameCaptured; i++) {
             //setting time position at which you want to retrieve frames
             frameList.add(retriever.getFrameAtTime(5000 * i));
             System.out.println("dodal");
         }
-        Intent intent2 = new Intent(Processing.this, VideoPlay.class);
+
+        initTensorFlowAndLoadModel();
+
+        // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
+
+        for (int i = 0; i < numeroFrameCaptured-1; i++) {
+            Bitmap bitmap = frameList.get(i);
+            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+            System.out.println(bitmap1);
+            try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
+            System.out.println(results.toString());}
+            catch (Exception e){
+                System.out.println("problem");
+            }
+
+        }
+
+
+        /*Intent intent2 = new Intent(Processing.this, VideoPlay.class);
         intent2.putExtra("videoURI", contentURI);
-        startActivity(intent2);
+        startActivity(intent2);*/
 
 
 
