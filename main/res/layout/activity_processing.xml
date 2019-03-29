@@ -20,7 +20,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_processing" />
+    <include
+        android:id="@+id/include2"
+        layout="@layout/content_processing" />
+
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="298dp"
+        android:layout_height="441dp"
+        android:text="TextView"
+        android:visibility="visible"
+        app:layout_anchor="@+id/include2"
+        app:layout_anchorGravity="bottom|center" />
 
 
 </android.support.design.widget.CoordinatorLayout>

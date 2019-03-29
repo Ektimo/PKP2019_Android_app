@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,7 +35,7 @@ public class Processing extends AppCompatActivity {
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
     private CameraView cameraView;
-
+    private TextView textViewResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class Processing extends AppCompatActivity {
         setContentView(R.layout.activity_processing);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        textViewResult = (TextView) findViewById(R.id.textViewResult);
+        textViewResult.setMovementMethod(new ScrollingMovementMethod());
 
 
         Intent intent = getIntent();
@@ -78,15 +82,17 @@ public class Processing extends AppCompatActivity {
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
 
-        for (int i = 0; i < numeroFrameCaptured-1; i++) {
+        for (int i = 0; i < 5; i++) {
             Bitmap bitmap = frameList.get(i);
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
             System.out.println(bitmap1);
             try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
-            System.out.println(results.toString());}
+            System.out.println(results.toString());
+            textViewResult.setText(results.toString()); }
             catch (Exception e){
-                System.out.println("problem");
+                System.out.println("problem" + e);
             }
+
 
         }
 
