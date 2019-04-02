@@ -46,7 +46,7 @@ public class Processing extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         textViewResult = (TextView) findViewById(R.id.textViewResult);
-        textViewResult.setMovementMethod(new ScrollingMovementMethod());
+        //textViewResult.setMovementMethod(new ScrollingMovementMethod());
 
 
         Intent intent = getIntent();
@@ -100,9 +100,9 @@ public class Processing extends AppCompatActivity {
         }
 
 
-        Intent intent2 = new Intent(Processing.this, VideoPlay.class);
+        /*Intent intent2 = new Intent(Processing.this, VideoPlay.class);
         intent2.putExtra("videoURI", contentURI);
-        startActivity(intent2);
+        startActivity(intent2);*/
 
 
 

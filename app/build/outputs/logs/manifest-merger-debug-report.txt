@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
 MERGED from [com.android.support:support-v4:28.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/support-v4-28.0.0.aar/3b7b7ab717912969b8a182691aa07c61/AndroidManifest.xml:17:1-22:12
 MERGED from [com.karumi:dexter:5.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/dexter-5.0.0.aar/997d1784dee39adac9fc13d29092badc/AndroidManifest.xml:17:1-32:12
 MERGED from [com.android.support:design:28.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/design-28.0.0.aar/feaddfde80bd6cb82c1910c4bc3b4d66/AndroidManifest.xml:17:1-24:12
@@ -43,47 +43,47 @@ MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /home/student/.gradle/cache
 MERGED from [android.arch.lifecycle:livedata:1.1.1] /home/student/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/94e9c03e75c0d7138cc9917baf0e74be/AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /home/student/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/d323df904bbc486e56f5c72c456f2d33/AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.core:runtime:1.1.1] /home/student/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/53828033510d1f8af08fa42c7995168b/AndroidManifest.xml:17:1-22:12
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
 	package
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:3:5-33
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:3:5-33
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 	android:versionName
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 	android:versionCode
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:11-69
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:11-69
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:5:5-80
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:5:5-80
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:5:22-77
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:5:22-77
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:6:5-81
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:6:5-81
 MERGED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:10:5-81
 MERGED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:10:5-81
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:6:22-78
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:6:22-78
 uses-permission#android.permission.CAMERA
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:7:5-65
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:7:5-65
 MERGED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:11:5-65
 MERGED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:11:5-65
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:7:22-62
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:7:22-62
 uses-feature#android.hardware.camera
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:9:5-60
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:9:5-60
 MERGED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:14:5-60
 MERGED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:14:5-60
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:9:19-57
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:9:19-57
 application
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:11:5-51:19
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:11:5-51:19
 MERGED from [com.karumi:dexter:5.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/dexter-5.0.0.aar/997d1784dee39adac9fc13d29092badc/AndroidManifest.xml:26:5-30:19
 MERGED from [com.karumi:dexter:5.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/dexter-5.0.0.aar/997d1784dee39adac9fc13d29092badc/AndroidManifest.xml:26:5-30:19
 MERGED from [com.android.support:design:28.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/design-28.0.0.aar/feaddfde80bd6cb82c1910c4bc3b4d66/AndroidManifest.xml:22:5-20
@@ -103,73 +103,73 @@ MERGED from [com.android.support:versionedparcelable:28.0.0] /home/student/.grad
 	android:appComponentFactory
 		ADDED from [com.android.support:support-compat:28.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/d32bfe18697e6673b8fa268c6154face/AndroidManifest.xml:22:18-91
 	android:supportsRtl
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:16:9-35
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:16:9-35
 	android:label
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:14:9-41
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:14:9-41
 	android:roundIcon
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:15:9-54
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:15:9-54
 	android:icon
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:13:9-43
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:13:9-43
 	android:allowBackup
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:12:9-35
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:12:9-35
 	android:theme
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:17:9-40
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:17:9-40
 activity#com.example.anonai.Processing
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:18:9-21:68
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:18:9-21:68
 	android:label
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:20:13-62
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:20:13-62
 	android:theme
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:21:13-56
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:21:13-56
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:19:13-39
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:19:13-39
 activity#com.example.anonai.VideoPlay
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:22:9-30:20
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:22:9-30:20
 	android:label
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:25:13-62
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:25:13-62
 	android:configChanges
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:24:13-74
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:24:13-74
 	android:theme
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:26:13-51
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:26:13-51
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:23:13-38
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:23:13-38
 intent-filter#category:name:android.intent.category.DEFAULT
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:27:13-29:29
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:27:13-29:29
 category#android.intent.category.DEFAULT
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:28:17-76
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:28:17-76
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:28:27-73
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:28:27-73
 activity#com.example.anonai.Splash
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:31:9-40:20
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:31:9-40:20
 	android:label
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:33:13-45
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:33:13-45
 	android:theme
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:34:13-56
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:34:13-56
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:32:13-35
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:32:13-35
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:35:13-39:29
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:35:13-39:29
 action#android.intent.action.MAIN
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:36:17-69
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:36:17-69
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:36:25-66
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:36:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:38:17-77
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:38:17-77
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:38:27-74
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:38:27-74
 activity#com.example.anonai.MainActivity
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:41:9-50:20
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:41:9-50:20
 	android:label
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:43:13-45
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:43:13-45
 	android:theme
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:44:13-56
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:44:13-56
 	android:name
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:42:13-41
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:42:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.DEFAULT
-ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:45:13-49:29
+ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:45:13-49:29
 uses-sdk
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 MERGED from [com.android.support:support-v4:28.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/support-v4-28.0.0.aar/3b7b7ab717912969b8a182691aa07c61/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-v4:28.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/support-v4-28.0.0.aar/3b7b7ab717912969b8a182691aa07c61/AndroidManifest.xml:20:5-44
 MERGED from [com.karumi:dexter:5.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/dexter-5.0.0.aar/997d1784dee39adac9fc13d29092badc/AndroidManifest.xml:22:5-24:41
@@ -246,16 +246,16 @@ MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /home/student/.gradle/c
 MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /home/student/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/d323df904bbc486e56f5c72c456f2d33/AndroidManifest.xml:20:5-44
 MERGED from [android.arch.core:runtime:1.1.1] /home/student/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/53828033510d1f8af08fa42c7995168b/AndroidManifest.xml:20:5-44
 MERGED from [android.arch.core:runtime:1.1.1] /home/student/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/53828033510d1f8af08fa42c7995168b/AndroidManifest.xml:20:5-44
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		ADDED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
-		INJECTED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		ADDED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
+		INJECTED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml
 activity#com.karumi.dexter.DexterActivity
 ADDED from [com.karumi:dexter:5.0.0] /home/student/.gradle/caches/transforms-1/files-1.1/dexter-5.0.0.aar/997d1784dee39adac9fc13d29092badc/AndroidManifest.xml:27:9-29:72
 	android:theme
@@ -285,4 +285,4 @@ ADDED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transf
 	android:name
 		ADDED from [com.wonderkiln:camerakit:0.13.1] /home/student/.gradle/caches/transforms-1/files-1.1/camerakit-0.13.1.aar/594f48dda94bcbc6b4c2e2d190dd1adb/AndroidManifest.xml:22:9-51
 uses-permission#android.permission.READ_PHONE_STATE
-IMPLIED from /home/student/AndroidStudioProjects/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12 reason: tensorflow.contrib.android has a targetSdkVersion < 4
+IMPLIED from /home/student/Documents/AnonAI/androidApp/app/src/main/AndroidManifest.xml:2:1-53:12 reason: tensorflow.contrib.android has a targetSdkVersion < 4
