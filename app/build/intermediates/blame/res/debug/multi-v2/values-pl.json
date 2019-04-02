@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/student/AndroidStudioProjects/androidApp/AnonAI/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-pl/values-pl.xml",
+            "outputFile": "/home/student/AndroidStudioProjects/androidApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-pl/values-pl.xml",
             "map": [
                 {
                     "source": "/home/student/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/d32bfe18697e6673b8fa268c6154face/res/values-pl/values-pl.xml",

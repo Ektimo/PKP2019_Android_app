@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/student/AndroidStudioProjects/androidApp/AnonAI/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
+            "outputFile": "/home/student/AndroidStudioProjects/androidApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
             "map": [
                 {
                     "source": "/home/student/.gradle/caches/transforms-1/files-1.1/cardview-v7-28.0.0.aar/1cc1cd2527e1f78b76652358ffef17c4/res/values-v23/values-v23.xml",
