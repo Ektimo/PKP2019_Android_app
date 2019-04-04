@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Apr 04 12:09:28 CEST 2019
+#Thu Apr 04 12:36:44 CEST 2019
 5.base=/home/student/AndroidStudioProjects/androidApp/app/build/intermediates/transforms/stripDebugSymbol/debug/0
 22.path=lib/mips64/libJniBitmapOperator.so
 32.set=NATIVE_RESOURCE

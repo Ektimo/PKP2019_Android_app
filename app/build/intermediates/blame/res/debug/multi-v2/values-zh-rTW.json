@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/student/Documents/AnonAI/androidApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-zh-rTW/values-zh-rTW.xml",
+            "outputFile": "/home/student/AndroidStudioProjects/androidApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-zh-rTW/values-zh-rTW.xml",
             "map": [
                 {
                     "source": "/home/student/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/6adce7d03d3822bbea9174882edb02c8/res/values-zh-rTW/values-zh-rTW.xml",

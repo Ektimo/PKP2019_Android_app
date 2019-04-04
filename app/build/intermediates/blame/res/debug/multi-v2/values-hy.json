@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/student/Documents/AnonAI/androidApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hy/values-hy.xml",
+            "outputFile": "/home/student/AndroidStudioProjects/androidApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-hy/values-hy.xml",
             "map": [
                 {
                     "source": "/home/student/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/d32bfe18697e6673b8fa268c6154face/res/values-hy/values-hy.xml",
