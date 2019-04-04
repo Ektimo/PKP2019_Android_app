@@ -75,11 +75,6 @@
         <activity
             android:name="com.karumi.dexter.DexterActivity"
             android:theme="@style/Dexter.Internal.Theme.Transparent" />
-
-        <provider
-            android:name="com.android.tools.ir.server.InstantRunContentProvider"
-            android:authorities="com.example.anonai.com.android.tools.ir.server.InstantRunContentProvider"
-            android:multiprocess="true" />
     </application>
 
 </manifest>

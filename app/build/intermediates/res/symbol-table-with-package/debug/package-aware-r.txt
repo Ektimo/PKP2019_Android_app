@@ -1098,6 +1098,7 @@ id browser_actions_menu_items
 id browser_actions_menu_view
 id button2
 id button3
+id button4
 id buttonPanel
 id cancel_action
 id center
@@ -1155,6 +1156,7 @@ id icon_group
 id ifRoom
 id image
 id include2
+id include3
 id info
 id invisible
 id italic

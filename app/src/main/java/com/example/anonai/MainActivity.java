@@ -1,5 +1,7 @@
 package com.example.anonai;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import android.widget.VideoView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
@@ -29,6 +32,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private Button btn2;
+    private Button btn4;
     private Button btn3;
     private VideoView videoView;
     private static final String VIDEO_DIRECTORY = "/anonai";
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         btn2 = (Button) findViewById(R.id.button2);
         btn3 = (Button) findViewById(R.id.button3);
-
+        btn4 = (Button) findViewById(R.id.button4);
         videoView = (VideoView) findViewById(R.id.vv);
 
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
                 chooseVideoFromGallery();
             }
         });
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {loadModel();}
+                catch (Exception e){
+                    System.out.println(e);
+                }
+            }
+        });
     }
 
     public void chooseVideoFromGallery() {
@@ -72,6 +85,20 @@ public class MainActivity extends AppCompatActivity {
     private void takeVideoFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         startActivityForResult(intent, CAMERA);
+
+    }
+
+    private void loadModel() throws IOException {
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File directory = contextWrapper.getDir(getFilesDir().getName(), Context.MODE_PRIVATE);
+        File file =  new File(directory,"tensorflow_inception_graph.pb");
+        String data = "tensorflow_inception_graph";
+        FileOutputStream fos = new FileOutputStream("tensorflow_inception_graph.pb", true); // save
+        fos.write(data.getBytes());
+        fos.close();
+
+
+
     }
 
     @Override
@@ -98,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
+            System.out.println("je kamera");
             Uri contentURI = data.getData();
             String recordedVideoPath = getPath(contentURI);
             Log.d("frrr",recordedVideoPath);
