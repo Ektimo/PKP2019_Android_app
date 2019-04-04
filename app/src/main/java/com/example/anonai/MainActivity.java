@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void takeVideoFromCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        System.out.println("odpiram kamero");
+        Intent intent = new Intent(MediaStore.INTENT_ACTION_VIDEO_CAMERA);
         startActivityForResult(intent, CAMERA);
 
     }
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("what","gale");
             if (data != null) {
                 Uri contentURI = data.getData();
+                System.out.println("-> Processing");
 
 //                Intent intent1 = new Intent(MainActivity.this, Processing.class);
 //
