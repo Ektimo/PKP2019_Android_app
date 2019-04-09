@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
 
+import static java.security.AccessController.getContext;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,13 +92,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadModel() throws IOException {
+
+        // preveri če je model že shranjen in ga shrani samo če ni)
+        File file1 = getBaseContext().getFileStreamPath("tensorflow_inception_graph.pb");
+        System.out.println(file1.exists());
+        if  (!file1.exists()){
+
+
+        System.out.println("zacel shranjevati");
         ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
         File directory = contextWrapper.getDir(getFilesDir().getName(), Context.MODE_PRIVATE);
+        System.out.println("directory" + directory);
         File file =  new File(directory,"tensorflow_inception_graph.pb");
         String data = "tensorflow_inception_graph";
         FileOutputStream fos = new FileOutputStream("tensorflow_inception_graph.pb", true); // save
         fos.write(data.getBytes());
-        fos.close();
+        fos.close();}
 
 
 
@@ -191,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         } else
             return null;
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
