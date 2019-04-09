@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadModel() throws IOException {
         if (isConnectingToInternet())
-            new DownloadTask(MainActivity.this, btn4, Utils.downloadLabels2);
+            new DownloadTask(MainActivity.this, btn4, Utils.downloadLabels);
         else
             Toast.makeText(MainActivity.this, "Oops!! There is no internet connection. Please enable internet connection and try again.", Toast.LENGTH_SHORT).show();
 
