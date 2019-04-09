@@ -3,6 +3,8 @@ package com.example.anonai;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +21,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import android.widget.Button;
+import android.widget.Toast;
 import android.widget.VideoView;
 import java.io.File;
 import java.io.FileInputStream;
@@ -92,24 +95,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadModel() throws IOException {
-
-        // preveri če je model že shranjen in ga shrani samo če ni)
-        File file1 = getBaseContext().getFileStreamPath("tensorflow_inception_graph.pb");
-        System.out.println(file1.exists());
-        if  (!file1.exists()){
-
-
-        System.out.println("zacel shranjevati");
-        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-        File directory = contextWrapper.getDir(getFilesDir().getName(), Context.MODE_PRIVATE);
-        System.out.println("directory" + directory);
-        File file =  new File(directory,"tensorflow_inception_graph.pb");
-        String data = "tensorflow_inception_graph";
-        FileOutputStream fos = new FileOutputStream("tensorflow_inception_graph.pb", true); // save
-        fos.write(data.getBytes());
-        fos.close();}
-
-
+        if (isConnectingToInternet())
+            new DownloadTask(MainActivity.this, btn4, Utils.downloadLabels2);
+        else
+            Toast.makeText(MainActivity.this, "Oops!! There is no internet connection. Please enable internet connection and try again.", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -225,5 +214,14 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    //Check if internet is present or not
+    private boolean isConnectingToInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager
+                .getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
+    }
 }
