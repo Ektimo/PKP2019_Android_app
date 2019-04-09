@@ -2,6 +2,7 @@ package com.example.anonai;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.support.v4.os.TraceCompat;
 import android.util.Log;
 
@@ -75,7 +76,7 @@ public class TensorFlowImageClassifier implements Classifier {
 
         // Read the label names into memory.
         // TODO(andrewharp): make this handle non-assets.
-        String actualFilename = labelFilename.split("file:///android_asset/")[1];
+        String actualFilename = "imagenet_comp_graph_label_strings.txt";
         Log.i(TAG, "Reading labels from: " + actualFilename);
         BufferedReader br;
         br = new BufferedReader(new InputStreamReader(assetManager.open(actualFilename)));

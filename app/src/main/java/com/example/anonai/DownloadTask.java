@@ -27,8 +27,7 @@ public class DownloadTask {
         this.buttonText = buttonText;
         this.downloadUrl = downloadUrl;
 
-        //downloadFileName = downloadUrl.replace(Utils.mainUrl, "");//Create file name by picking download file name from URL
-        downloadFileName = "labels.txt";
+        downloadFileName = downloadUrl.replace(Utils.mainUrl, "");//Create file name by picking download file name from URL
         Log.e(TAG, downloadFileName);
 
         //Start Downloading Task
@@ -119,11 +118,10 @@ public class DownloadTask {
                 }
 
                 outputFile = new File(apkStorage, downloadFileName);//Create Output file in Main File
-                File outputFile2 = new File("data/data/com.example.anonai/", downloadFileName);
 
                 //Create New File if not present
-                if (!outputFile2.exists()) {
-                    outputFile2.createNewFile();
+                if (!outputFile.exists()) {
+                    outputFile.createNewFile();
                     Log.e(TAG, "File Created");
                 }
 
