@@ -127,7 +127,7 @@ public class DownloadTask {
                     Log.e(TAG, "File Created");
                 }
 
-                FileOutputStream fos = new FileOutputStream(outputFile2);//Get OutputStream for NewFile Location
+                FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
 
                 InputStream is = c.getInputStream();//Get InputStream for connection
 
