@@ -31,8 +31,11 @@ public class Processing extends AppCompatActivity {
     private static final String INPUT_NAME = "input";
     private static final String OUTPUT_NAME = "output";
 
-    private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/tensorflow_inception_graph.pb";
-    private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/imagenet_comp_graph_label_strings.txt";
+    //private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/assets/tensorflow_inception_graph.pb";
+    //private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/assets/imagenet_comp_graph_label_strings.txt";
+
+    private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
+    private static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
 
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();

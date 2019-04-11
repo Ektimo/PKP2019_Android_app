@@ -41,7 +41,7 @@ import static java.security.AccessController.getContext;
 public class MainActivity extends AppCompatActivity {
 
     private Button btn2;
-    private Button btn4;
+    //private Button btn4;
     private Button btn3;
     private VideoView videoView;
     private static final String VIDEO_DIRECTORY = "/anonai";
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         btn2 = (Button) findViewById(R.id.button2);
         btn3 = (Button) findViewById(R.id.button3);
-        btn4 = (Button) findViewById(R.id.button4);
+        //btn4 = (Button) findViewById(R.id.button4);
         videoView = (VideoView) findViewById(R.id.vv);
 
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 chooseVideoFromGallery();
             }
         });
+
+        /* Gumb za prenos modela
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(e);
                 }}
             }
-        });
+        });*/
 
     }
 
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadModel() throws IOException {
+    /*private void loadModel() throws IOException {
         if (isConnectingToInternet()) {
             new DownloadTask(MainActivity.this, btn4, Utils.downloadLabels);
             new DownloadTask(MainActivity.this, btn4, Utils.downloadModel);
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         else
             Toast.makeText(MainActivity.this, "Oops!! There is no internet connection. Please enable internet connection and try again.", Toast.LENGTH_SHORT).show();
 
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -220,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -241,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
