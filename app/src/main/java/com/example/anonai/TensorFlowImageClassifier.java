@@ -2,21 +2,21 @@ package com.example.anonai;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.v4.os.TraceCompat;
 import android.util.Log;
 
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Vector;
-import org.tensorflow.contrib.android.RunStats;
 
 public class TensorFlowImageClassifier implements Classifier {
 
@@ -76,10 +76,12 @@ public class TensorFlowImageClassifier implements Classifier {
 
         // Read the label names into memory.
         // TODO(andrewharp): make this handle non-assets.
-        String actualFilename = "imagenet_comp_graph_label_strings.txt";
-        Log.i(TAG, "Reading labels from: " + actualFilename);
+        Log.i(TAG, "Reading labels from: " + labelFilename);
         BufferedReader br;
-        br = new BufferedReader(new InputStreamReader(assetManager.open(actualFilename)));
+        br = new BufferedReader(new InputStreamReader(assetManager.open(labelFilename)));
+
+        // odpre datoteko labels.txt tudi če ni shranjena v assets
+        // br = new BufferedReader(new InputStreamReader(new FileInputStream(labelFilename)));
         String line;
         while ((line = br.readLine()) != null) {
             c.labels.add(line);
@@ -87,6 +89,11 @@ public class TensorFlowImageClassifier implements Classifier {
         br.close();
 
         c.inferenceInterface = new TensorFlowInferenceInterface(assetManager, modelFilename);
+
+        /* Konstruktor sprejme InputStream samo v najnovejši verziji, ki more bit enaka verziji Tensorflowa, v kateri je bil model natreniran.S
+        InputStream inputStream = new FileInputStream(modelFilename);
+        c.inferenceInterface = new TensorFlowInferenceInterface(inputStream);*/
+
         // The shape of the output is [N, NUM_CLASSES], where N is the batch size.
         int numClasses =
                 (int) c.inferenceInterface.graph().operation(outputName).output(0).shape().size(1);
