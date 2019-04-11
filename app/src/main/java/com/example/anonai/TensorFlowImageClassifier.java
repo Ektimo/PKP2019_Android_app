@@ -76,7 +76,8 @@ public class TensorFlowImageClassifier implements Classifier {
 
         // Read the label names into memory.
         // TODO(andrewharp): make this handle non-assets.
-        Log.i(TAG, "Reading labels from: " + labelFilename);
+        String actualFilename = labelFilename.replace("file:///android:asset/", "");
+        Log.i(TAG, "Reading labels from: " + actualFilename);
         BufferedReader br;
         br = new BufferedReader(new InputStreamReader(assetManager.open(labelFilename)));
 
