@@ -23,23 +23,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 public class Processing extends AppCompatActivity {
-    private static final int INPUT_SIZE = 224;
-    private static final int IMAGE_MEAN = 117;
-    private static final float IMAGE_STD = 1;
-    private static final String INPUT_NAME = "input";
-    private static final String OUTPUT_NAME = "output";
+    public static final int INPUT_SIZE = 224;
+    public static final int IMAGE_MEAN = 117;
+    public static final float IMAGE_STD = 1;
+    public static final String INPUT_NAME = "input";
+    public static final String OUTPUT_NAME = "output";
 
     //private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/assets/tensorflow_inception_graph.pb";
     //private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/assets/imagenet_comp_graph_label_strings.txt";
 
-    private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-    private static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
+    public static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
+    public static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
+
+    //public static final String MODEL_FILE = "detect.tflite";
+    //public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
 
     public Classifier classifier;
-    private Executor executor = Executors.newSingleThreadExecutor();
+    public Executor executor = Executors.newSingleThreadExecutor();
     private CameraView cameraView;
     private TextView textViewResult;
 
@@ -79,20 +83,25 @@ public class Processing extends AppCompatActivity {
         int NOF = Integer.parseInt(numberOfFrames);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
         int duration_second = duration_millisec / 1000;  //millisec to sec.
-        int frames_per_second = 1;  //no. of frames want to retrieve per second
+        int frames_per_second = 10;  //no. of frames want to retrieve per second
         int numeroFrameCaptured = frames_per_second * duration_second;
         for (int i = 0; i < numeroFrameCaptured; i++) {
             //setting time position at which you want to retrieve frames
             frameList.add(retriever.getFrameAtIndex(i*(NOF/(duration_second * frames_per_second))));
-            System.out.println("dodal" + 1000*i);
+            System.out.println("dodal " + i);
         }
 
         initTensorFlowAndLoadModel();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        };
         System.out.println("Ustvaril classifier");
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
 
-        for (int i = 0; i < numeroFrameCaptured-1; i++) {
+        for (int i = 0; i < numeroFrameCaptured; i++) {
             Bitmap bitmap = frameList.get(i);
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
             System.out.println(bitmap1);
