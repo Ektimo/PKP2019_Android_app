@@ -40,11 +40,11 @@ public class TensorFlowImageClassifier implements Classifier {
     private float[] outputs;
     private String[] outputNames;
 
-    private TensorFlowInferenceInterface inferenceInterface;
+    public TensorFlowInferenceInterface inferenceInterface;
 
     private boolean runStats = false;
 
-    private TensorFlowImageClassifier() {
+    public TensorFlowImageClassifier() {
     }
 
     /**
@@ -76,10 +76,10 @@ public class TensorFlowImageClassifier implements Classifier {
 
         // Read the label names into memory.
         // TODO(andrewharp): make this handle non-assets.
-        String actualFilename = labelFilename.replace("file:///android_asset/", "");
+        String actualFilename = labelFilename.split("file:///android_asset/")[1];
         Log.i(TAG, "Reading labels from: " + actualFilename);
         BufferedReader br;
-        br = new BufferedReader(new InputStreamReader(assetManager.open(labelFilename)));
+        br = new BufferedReader(new InputStreamReader(assetManager.open(actualFilename)));
 
         // odpre datoteko labels.txt tudi če ni shranjena v assets
         // br = new BufferedReader(new InputStreamReader(new FileInputStream(labelFilename)));
@@ -91,7 +91,7 @@ public class TensorFlowImageClassifier implements Classifier {
 
         c.inferenceInterface = new TensorFlowInferenceInterface(assetManager, modelFilename);
 
-        /* Konstruktor sprejme InputStream samo v najnovejši verziji, ki more bit enaka verziji Tensorflowa, v kateri je bil model natreniran.S
+        /* Konstruktor sprejme InputStream samo v najnovejši verziji, ki more bit enaka verziji Tensorflowa, v kateri je bil model natreniran.
         InputStream inputStream = new FileInputStream(modelFilename);
         c.inferenceInterface = new TensorFlowInferenceInterface(inputStream);*/
 

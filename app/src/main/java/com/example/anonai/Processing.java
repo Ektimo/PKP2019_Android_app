@@ -1,6 +1,7 @@
 package com.example.anonai;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import android.graphics.Bitmap;
@@ -37,11 +38,12 @@ public class Processing extends AppCompatActivity {
     private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
     private static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
 
-    private Classifier classifier;
+    public Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
     private CameraView cameraView;
     private TextView textViewResult;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,17 +75,20 @@ public class Processing extends AppCompatActivity {
             System.out.println("Exception= " + e);
         }
         String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
+        int NOF = Integer.parseInt(numberOfFrames);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
         int duration_second = duration_millisec / 1000;  //millisec to sec.
         int frames_per_second = 1;  //no. of frames want to retrieve per second
         int numeroFrameCaptured = frames_per_second * duration_second;
         for (int i = 0; i < numeroFrameCaptured; i++) {
             //setting time position at which you want to retrieve frames
-            frameList.add(retriever.getFrameAtTime(5000 * i));
-            System.out.println("dodal");
+            frameList.add(retriever.getFrameAtIndex(i*(NOF/(duration_second * frames_per_second))));
+            System.out.println("dodal" + 1000*i);
         }
 
         initTensorFlowAndLoadModel();
+        System.out.println("Ustvaril classifier");
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
 
@@ -136,7 +141,7 @@ public class Processing extends AppCompatActivity {
             });
         }
 
-        private void initTensorFlowAndLoadModel() {
+        public void initTensorFlowAndLoadModel() {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
