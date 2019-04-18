@@ -4,12 +4,14 @@ package com.example.anonai;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
@@ -19,7 +21,16 @@ import android.widget.ImageView;
 import com.wonderkiln.camerakit.CameraView;
 import android.widget.TextView;
 
+import org.jcodec.api.android.AndroidSequenceEncoder;
+import org.jcodec.common.io.NIOUtils;
+import org.jcodec.common.io.SeekableByteChannel;
+import org.jcodec.common.model.Rational;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -32,6 +43,7 @@ public class Processing extends AppCompatActivity {
     public static final float IMAGE_STD = 1;
     public static final String INPUT_NAME = "input";
     public static final String OUTPUT_NAME = "output";
+    private static final String VIDEO_DIRECTORY = "/anonai";
 
     //private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/assets/tensorflow_inception_graph.pb";
     //private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/assets/imagenet_comp_graph_label_strings.txt";
@@ -90,6 +102,42 @@ public class Processing extends AppCompatActivity {
             frameList.add(retriever.getFrameAtIndex(i*(NOF/(duration_second * frames_per_second))));
             System.out.println("dodal " + i);
         }
+
+        SeekableByteChannel out = null;
+
+        try {
+
+            File root= new File(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY);
+            File dir = new File(root.getAbsolutePath());
+
+
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File file = new File(dir, "test.mp4");
+            String path = file.getAbsolutePath();
+            out = NIOUtils.writableFileChannel(path);
+            // for Android use: AndroidSequenceEncoder
+            AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(25, 1));
+            for (int i = 0; i < numeroFrameCaptured; i++) {
+                // Generate the image, for Android use Bitmap
+                Bitmap image = frameList.get(i);
+                Bitmap image1 = Bitmap.createScaledBitmap(image, INPUT_SIZE, INPUT_SIZE, false);
+                // Encode the image
+                encoder.encodeImage(image1);
+            }
+            // Finalize the encoding, i.e. clear the buffers, write the header, etc.
+            encoder.finish();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            NIOUtils.closeQuietly(out);
+        }
+
+
+
 
         initTensorFlowAndLoadModel();
         try {
@@ -180,5 +228,19 @@ public class Processing extends AppCompatActivity {
                 }
             });
         }*/
+public String  getPath(Uri uri) {
+    String[] projection = { MediaStore.Video.Media.DATA };
+    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+    if (cursor != null) {
+        // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+        // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    } else
+        return null;
+}
+
 
 }

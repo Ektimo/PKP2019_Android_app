@@ -21,6 +21,11 @@ android {
         noCompress "lite"
     }
     buildToolsVersion '28.0.3'
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.2'
+    }
+
 }
 
 dependencies {
@@ -42,6 +47,8 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-android:1.2.0'
     implementation 'com.wonderkiln:camerakit:0.13.1'
     implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'org.jcodec:jcodec:0.2.3'
+    implementation 'org.jcodec:jcodec-android:0.2.3'
     //implementation 'org.tensorflow:tensorflow-android:+'
     //implementation 'org.tensorflow:tensorflow-lite:0.0.0-nightly'
 }
