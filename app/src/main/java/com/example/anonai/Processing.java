@@ -3,34 +3,30 @@ package com.example.anonai;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import com.wonderkiln.camerakit.CameraView;
 import android.widget.TextView;
 
-import org.jcodec.api.android.AndroidSequenceEncoder;
-import org.jcodec.common.io.NIOUtils;
-import org.jcodec.common.io.SeekableByteChannel;
-import org.jcodec.common.model.Rational;
+import com.wonderkiln.camerakit.CameraView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import org.jcodec.api.android.AndroidSequenceEncoder;
+import org.jcodec.common.io.FileChannelWrapper;
+import org.jcodec.common.io.NIOUtils;
+import org.jcodec.common.model.Rational;
+
+import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -94,32 +90,36 @@ public class Processing extends AppCompatActivity {
         String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
         int NOF = Integer.parseInt(numberOfFrames);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
-        int duration_second = duration_millisec / 1000;  //millisec to sec.
-        int frames_per_second = 10;  //no. of frames want to retrieve per second
-        int numeroFrameCaptured = frames_per_second * duration_second;
-        for (int i = 0; i < numeroFrameCaptured; i++) {
+        //int duration_second = duration_millisec / 1000;  //millisec to sec.
+        int frames_per_second = 3;  //no. of frames want to retrieve per second
+        int numeroFrameCaptured = frames_per_second * (duration_millisec / 1000);
+        for (int i = 0; i < NOF; i++) {
             //setting time position at which you want to retrieve frames
-            frameList.add(retriever.getFrameAtIndex(i*(NOF/(duration_second * frames_per_second))));
+            //frameList.add(retriever.getFrameAtIndex(i*k*2));
+            long j = i*(1000000L/frames_per_second);
+            //frameList.add(retriever.getFrameAtTime(j, MediaMetadataRetriever.OPTION_CLOSEST));
+            frameList.add(retriever.getFrameAtIndex(i));
             System.out.println("dodal " + i);
         }
 
-        SeekableByteChannel out = null;
+        FileChannelWrapper out = null;
 
         try {
 
-            File root= new File(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY);
+            File root= new File(Environment.getExternalStorageDirectory()+VIDEO_DIRECTORY);
             File dir = new File(root.getAbsolutePath());
+            System.out.println(dir);
 
 
             if (!dir.exists()) {
-                dir.mkdirs();
+                dir.mkdir();
             }
             File file = new File(dir, "test.mp4");
             String path = file.getAbsolutePath();
             out = NIOUtils.writableFileChannel(path);
             // for Android use: AndroidSequenceEncoder
             AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(25, 1));
-            for (int i = 0; i < numeroFrameCaptured; i++) {
+            for (int i = 0; i < NOF; i++) {
                 // Generate the image, for Android use Bitmap
                 Bitmap image = frameList.get(i);
                 Bitmap image1 = Bitmap.createScaledBitmap(image, INPUT_SIZE, INPUT_SIZE, false);
