@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        if (isPermissionGranted()){
         Log.d("result",""+resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == this.RESULT_CANCELED) {
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             saveVideoToInternalStorage(recordedVideoPath);
             videoView.setVideoURI(contentURI);
             videoView.requestFocus();
-            videoView.start();
+            videoView.start();}
 
         }
 
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
             File currentFile = new File(filePath);
             File wallpaperDirectory = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
+            System.out.println(wallpaperDirectory);
             newfile = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".mp4");
 
             if (!wallpaperDirectory.exists()) {

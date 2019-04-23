@@ -102,40 +102,6 @@ public class Processing extends AppCompatActivity {
             System.out.println("dodal " + i);
         }
 
-        FileChannelWrapper out = null;
-
-        try {
-
-            File root= new File(Environment.getExternalStorageDirectory()+VIDEO_DIRECTORY);
-            File dir = new File(root.getAbsolutePath());
-            System.out.println(dir);
-
-
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            File file = new File(dir, "test.mp4");
-            String path = file.getAbsolutePath();
-            out = NIOUtils.writableFileChannel(path);
-            // for Android use: AndroidSequenceEncoder
-            AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(25, 1));
-            for (int i = 0; i < NOF; i++) {
-                // Generate the image, for Android use Bitmap
-                Bitmap image = frameList.get(i);
-                Bitmap image1 = Bitmap.createScaledBitmap(image, INPUT_SIZE, INPUT_SIZE, false);
-                // Encode the image
-                encoder.encodeImage(image1);
-            }
-            // Finalize the encoding, i.e. clear the buffers, write the header, etc.
-            encoder.finish();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            NIOUtils.closeQuietly(out);
-        }
-
 
 
 
@@ -164,6 +130,41 @@ public class Processing extends AppCompatActivity {
 
 
         }
+
+        FileChannelWrapper out = null;
+
+        try {
+
+            File root= new File(Environment.getExternalStorageDirectory()+VIDEO_DIRECTORY);
+            File dir = new File(root.getAbsolutePath());
+            System.out.println(dir);
+
+
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            File file = new File(dir, "test.mp4");
+            String path = file.getAbsolutePath();
+            out = NIOUtils.writableFileChannel(path);
+            // for Android use: AndroidSequenceEncoder
+            AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, 3));
+            for (int i = 0; i < NOF; i++) {
+                // Generate the image, for Android use Bitmap
+                Bitmap image = frameList.get(i);
+                Bitmap image1 = Bitmap.createScaledBitmap(image, INPUT_SIZE, INPUT_SIZE, false);
+                // Encode the image
+                encoder.encodeImage(image1);
+            }
+            // Finalize the encoding, i.e. clear the buffers, write the header, etc.
+            encoder.finish();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            NIOUtils.closeQuietly(out);
+        }
+
 
 
         /*Intent intent2 = new Intent(Processing.this, VideoPlay.class);
