@@ -47,7 +47,7 @@ public class Processing extends AppCompatActivity {
     public static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
     public static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
 
-    //public static final String MODEL_FILE = "detect.tflite";
+    //public static final String MODEL_FILE = "file:///android_asset/detect.tflite";
     //public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
 
     public Classifier classifier;
@@ -72,7 +72,6 @@ public class Processing extends AppCompatActivity {
 
         // Koda za zajem slik z videa
 
-        //ArrayList<Bitmap> frameList;
         ArrayList<Bitmap> frameList = new ArrayList<>();
 
         // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
@@ -90,19 +89,16 @@ public class Processing extends AppCompatActivity {
         String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
         int NOF = Integer.parseInt(numberOfFrames);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
-        //int duration_second = duration_millisec / 1000;  //millisec to sec.
         int frames_per_second = 3;  //no. of frames want to retrieve per second
         int numeroFrameCaptured = frames_per_second * (duration_millisec / 1000);
         for (int i = 0; i < numeroFrameCaptured; i++) {
             //setting time position at which you want to retrieve frames
             //frameList.add(retriever.getFrameAtIndex(i*k*2));
-            long j = i*(1000000L/frames_per_second);
+            long j = i * (1000000L / frames_per_second);
             //frameList.add(retriever.getFrameAtTime(j, MediaMetadataRetriever.OPTION_CLOSEST));
-            frameList.add(retriever.getFrameAtIndex(i*NOF/numeroFrameCaptured));
+            frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
             System.out.println("dodal " + i);
         }
-
-
 
 
         initTensorFlowAndLoadModel();
@@ -110,22 +106,32 @@ public class Processing extends AppCompatActivity {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        };
+        }
+        ;
         System.out.println("Ustvaril classifier");
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
 
-        for (int i = 0; i <numeroFrameCaptured; i++) {
+        for (int i = 0; i < numeroFrameCaptured; i++) {
             Bitmap bitmap = frameList.get(i);
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            };
+            }
+            ;
             System.out.println(bitmap1);
 
-            try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
+            try {
+                ImageClassifier classifier = new ImageClassifier(this);
+                String results = classifier.classifyFrame(bitmap1);
+                System.out.println(results);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            /*try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
                 System.out.println(results.toString());
                 try {
                     TimeUnit.SECONDS.sleep(1);
@@ -136,7 +142,7 @@ public class Processing extends AppCompatActivity {
              }
             catch (Exception e){
                 System.out.println("problem" + e);
-            }
+            }*/
 
 
         }
