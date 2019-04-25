@@ -11,41 +11,29 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="134dp"
+        android:layout_width="0dp"
         android:layout_height="66dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginEnd="41dp"
         android:background="@color/colorPrimaryDark"
         android:text="Live"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button3"
-        app:layout_constraintHorizontal_bias="0.59"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vv" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.622" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="181dp"
+        android:layout_width="0dp"
         android:layout_height="65dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:background="@color/colorPrimaryDark"
         android:text="Load from gallery"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vv" />
+        app:layout_constraintStart_toEndOf="@+id/button2" />
 
-    <VideoView
-        android:id="@+id/vv"
-        android:layout_width="412dp"
-        android:layout_height="425dp"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="88dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
 
     <!--<Button
         android:id="@+id/button4"

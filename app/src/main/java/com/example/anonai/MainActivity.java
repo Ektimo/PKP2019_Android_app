@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btn2 = (Button) findViewById(R.id.button2);
         btn3 = (Button) findViewById(R.id.button3);
         //btn4 = (Button) findViewById(R.id.button4);
-        videoView = (VideoView) findViewById(R.id.vv);
+        //videoView = (VideoView) findViewById(R.id.vv);
 
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
