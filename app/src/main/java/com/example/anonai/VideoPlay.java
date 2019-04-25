@@ -30,7 +30,7 @@ public class VideoPlay extends AppCompatActivity {
         getSupportActionBar().hide();
 
         Intent intent = getIntent();
-        Uri contentURI = intent.getParcelableExtra("videoURI");
+        Uri contentURI = intent.getParcelableExtra("videoURI1");
 
         videoView.setVideoURI(contentURI);
         videoView.requestFocus();

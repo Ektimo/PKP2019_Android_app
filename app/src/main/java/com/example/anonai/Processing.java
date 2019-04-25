@@ -2,6 +2,7 @@ package com.example.anonai;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
@@ -70,6 +72,7 @@ public class Processing extends AppCompatActivity {
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
 
+
         // Koda za zajem slik z videa
 
         ArrayList<Bitmap> frameList = new ArrayList<>();
@@ -112,6 +115,7 @@ public class Processing extends AppCompatActivity {
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
 
+
         for (int i = 0; i < numeroFrameCaptured; i++) {
             Bitmap bitmap = frameList.get(i);
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
@@ -123,15 +127,15 @@ public class Processing extends AppCompatActivity {
             ;
             System.out.println(bitmap1);
 
-            try {
+/*            try {
                 ImageClassifier classifier = new ImageClassifier(this);
                 String results = classifier.classifyFrame(bitmap1);
                 System.out.println(results);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
-            /*try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
+                try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
                 System.out.println(results.toString());
                 try {
                     TimeUnit.SECONDS.sleep(1);
@@ -142,13 +146,15 @@ public class Processing extends AppCompatActivity {
              }
             catch (Exception e){
                 System.out.println("problem" + e);
-            }*/
+            }
 
 
         }
 
-        FileChannelWrapper out = null;
+        Context context = getApplicationContext();
 
+        FileChannelWrapper out = null;
+        String fileName = getFileName(contentURI);
         try {
 
             File root= new File(Environment.getExternalStorageDirectory()+VIDEO_DIRECTORY);
@@ -159,22 +165,24 @@ public class Processing extends AppCompatActivity {
             if (!dir.exists()) {
                 dir.mkdir();
             }
-            File file = new File(dir, "test.mp4");
+            File file = new File(dir, fileName);
             String path = file.getAbsolutePath();
             out = NIOUtils.writableFileChannel(path);
             // for Android use: AndroidSequenceEncoder
-            AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(frames_per_second, 1));
+            AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000))); // video je nekaj sekund krajši, 8s -> 7s. 5s-> 3s?????
             for (int i = 0; i < numeroFrameCaptured; i++) {
                 // Generate the image, for Android use Bitmap
                 Bitmap image = frameList.get(i);
-                Bitmap image1 = Bitmap.createScaledBitmap(image, INPUT_SIZE, INPUT_SIZE, false);
+
+
+                Bitmap imageBlur = BlurFaces.blurFaces(image, 50, 50, 500, 500, context);
                 // Encode the image
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 };
-                encoder.encodeImage(image1);
+                encoder.encodeImage(imageBlur);
             }
             // Finalize the encoding, i.e. clear the buffers, write the header, etc.
             encoder.finish();
@@ -186,11 +194,11 @@ public class Processing extends AppCompatActivity {
             NIOUtils.closeQuietly(out);
         }
 
+        Uri uri = Uri.parse(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY + "/" + fileName);
 
-
-        /*Intent intent2 = new Intent(Processing.this, VideoPlay.class);
-        intent2.putExtra("videoURI", contentURI);
-        startActivity(intent2);*/
+        Intent intent2 = new Intent(Processing.this, VideoPlay.class);
+        intent2.putExtra("videoURI1", uri);
+        startActivity(intent2);
 
 
 
@@ -250,6 +258,28 @@ public class Processing extends AppCompatActivity {
                 }
             });
         }*/
+public String getFileName(Uri uri) {
+    String result = null;
+    if (uri.getScheme().equals("content")) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+    if (result == null) {
+        result = uri.getPath();
+        int cut = result.lastIndexOf('/');
+        if (cut != -1) {
+            result = result.substring(cut + 1);
+        }
+    }
+    return result;
+}
+
 public String  getPath(Uri uri) {
     String[] projection = { MediaStore.Video.Media.DATA };
     Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
