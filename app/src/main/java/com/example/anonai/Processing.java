@@ -72,6 +72,14 @@ public class Processing extends AppCompatActivity {
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
 
+        initTensorFlowAndLoadModel();
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Ustvaril classifier");
+
         // Koda za zajem slik z videa
 
         ArrayList<Bitmap> frameList = new ArrayList<>();
@@ -96,36 +104,40 @@ public class Processing extends AppCompatActivity {
         for (int i = 0; i < numeroFrameCaptured; i++) {
             frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
             System.out.println("dodal " + i);
+
+            Bitmap bitmap = frameList.get(i);
+            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+            try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
+                System.out.println(i + " " + results.toString());
+                textViewResult.setText(results.toString());
+            }
+            catch (Exception e){
+                System.out.println("problem" + e);
+            }
         }
 
 
-        initTensorFlowAndLoadModel();
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Ustvaril classifier");
+
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
 
 
-        for (int i = 0; i < numeroFrameCaptured; i++) {
+        /*for (int i = 0; i < numeroFrameCaptured; i++) {
             Bitmap bitmap = frameList.get(i);
             Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-            /*try {
+            *//*try {
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }*//*
 
-            /*try {
+            *//*try {
                 ImageClassifier classifier = new ImageClassifier(this);
                 String results = classifier.classifyFrame(bitmap1);
                 System.out.println(results);
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }*//*
 
             try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
                 System.out.println(i + " " + results.toString());
@@ -134,7 +146,7 @@ public class Processing extends AppCompatActivity {
             catch (Exception e){
                 System.out.println("problem" + e);
             }
-        }
+        }*/
 
         Context context = getApplicationContext();
 
