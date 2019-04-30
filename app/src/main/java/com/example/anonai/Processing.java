@@ -53,6 +53,7 @@ public class Processing extends AppCompatActivity {
     //public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
 
     public Classifier classifier;
+    public ImageClassifier imageClassifier;
     public Executor executor = Executors.newSingleThreadExecutor();
     private CameraView cameraView;
     private TextView textViewResult;
@@ -72,13 +73,14 @@ public class Processing extends AppCompatActivity {
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
 
-        initTensorFlowAndLoadModel();
+        // .pb model
+        /*initTensorFlowAndLoadModel();
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Ustvaril classifier");
+        System.out.println("Ustvaril classifier");*/
 
         // Koda za zajem slik z videa
 
@@ -101,7 +103,9 @@ public class Processing extends AppCompatActivity {
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
         int frames_per_second = 10;  //no. of frames want to retrieve per second
         int numeroFrameCaptured = frames_per_second * (duration_millisec / 1000);
-        for (int i = 0; i < numeroFrameCaptured; i++) {
+
+        // .pb model
+        /*for (int i = 0; i < numeroFrameCaptured; i++) {
             frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
             System.out.println("dodal " + i);
 
@@ -114,8 +118,29 @@ public class Processing extends AppCompatActivity {
             catch (Exception e){
                 System.out.println("problem" + e);
             }
+        }*/
+
+        // .tflite model
+        try {
+            imageClassifier = new ImageClassifier(this);
+        } catch (final IOException e) {
+             System.out.println(e.getStackTrace());
         }
 
+        for (int i = 0; i < numeroFrameCaptured; i++) {
+            frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
+
+            Bitmap bitmap = frameList.get(i);
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+            try {String result = imageClassifier.classifyFrame(scaledBitmap);
+                System.out.println(i + " " + result);
+                textViewResult.setText(result);
+            }
+            catch (Exception e){
+                System.out.println("problem" + e);
+            }
+        }
+        imageClassifier.close();
 
 
 
@@ -175,7 +200,7 @@ public class Processing extends AppCompatActivity {
                 Bitmap imageBlur = BlurFaces.blurFaces(image, 50, 50, 500, 500, context);
                 // Encode the image
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 };
