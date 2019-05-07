@@ -1,8 +1,11 @@
 package com.example.anonai;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
@@ -35,11 +38,15 @@ public class VideoPlay extends AppCompatActivity {
         Uri contentURI = intent.getParcelableExtra("videoURI1");
 
         String fullVideoName = contentURI.toString();
-        String videoName =
 
-        File mydir = this.getDir("Videos", this.MODE_PRIVATE);
+        String videoName =  intent.getStringExtra("videoName");
+
+        //File mydir = this.getDir("Videos", this.MODE_PRIVATE);
+        File root = new File(Environment.getExternalStorageDirectory() + "/anonai");
+        File mydir = new File(root.getAbsolutePath());
 
         File fileWithinMyDir = new File(mydir, videoName);
+        System.out.println(fileWithinMyDir);
 
         fileWithinMyDir.setReadable(true, false);
 
@@ -47,7 +54,7 @@ public class VideoPlay extends AppCompatActivity {
 
         Uri intentUri = Uri.fromFile(new File(videoResource));
 
-        videoView.setVideoURI(contentURI);
+        videoView.setVideoURI(intentUri);
         videoView.requestFocus();
         videoView.start();
 
@@ -61,4 +68,6 @@ public class VideoPlay extends AppCompatActivity {
         }, 10000);
 
     }
+
+
 }

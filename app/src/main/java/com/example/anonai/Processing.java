@@ -266,6 +266,8 @@ public class Processing extends AppCompatActivity {
 
         Intent intent2 = new Intent(Processing.this, VideoPlay.class);
         intent2.putExtra("videoURI1", uri);
+
+        intent2.putExtra("videoName", fileName);
         startActivity(intent2);
 
 
