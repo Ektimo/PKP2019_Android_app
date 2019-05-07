@@ -84,10 +84,10 @@ public class Processing extends AppCompatActivity {
 
         // Koda za zajem slik z videa
 
-        ArrayList<Bitmap> frameList = new ArrayList<>();
+        final ArrayList<Bitmap> frameList = new ArrayList<>();
 
         // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
 
         try {
@@ -99,10 +99,12 @@ public class Processing extends AppCompatActivity {
         }
         String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
-        int NOF = Integer.parseInt(numberOfFrames);
+        final int NOF = Integer.parseInt(numberOfFrames);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
         int frames_per_second = 10;  //no. of frames want to retrieve per second
-        int numeroFrameCaptured = frames_per_second * (duration_millisec / 1000);
+        final int numeroFrameCaptured = frames_per_second * (duration_millisec / 1000);
+
+
 
         // .pb model
         /*for (int i = 0; i < numeroFrameCaptured; i++) {
@@ -120,28 +122,75 @@ public class Processing extends AppCompatActivity {
             }
         }*/
 
-        // .tflite model
+        final Context context = getApplicationContext();
+
+        FileChannelWrapper out = null;
+        String fileName = getFileName(contentURI);
+
+
         try {
-            imageClassifier = new ImageClassifier(this);
-        } catch (final IOException e) {
-             System.out.println(e.getStackTrace());
-        }
+            File root = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
+            File dir = new File(root.getAbsolutePath());
+            System.out.println(dir);
 
-        for (int i = 0; i < numeroFrameCaptured; i++) {
-            frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
 
-            Bitmap bitmap = frameList.get(i);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-            try {String result = imageClassifier.classifyFrame(scaledBitmap);
-                System.out.println(i + " " + result);
-                textViewResult.setText(result);
+            if (!dir.exists()) {
+                dir.mkdir();
             }
-            catch (Exception e){
-                System.out.println("problem" + e);
-            }
-        }
-        imageClassifier.close();
+            File file = new File(dir, fileName);
+            String path = file.getAbsolutePath();
+            out = NIOUtils.writableFileChannel(path);
+            // for Android use: AndroidSequenceEncoder
+            final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
 
+            // .tflite model
+            try {
+                imageClassifier = new ImageClassifier(this);
+            } catch (final IOException e) {
+                System.out.println(e.getStackTrace());
+            }
+            Runnable runnable = new Runnable() {
+
+                public void run() {
+                    for (int i = 0; i < numeroFrameCaptured; i++) {
+                        frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
+
+                        Bitmap bitmap = frameList.get(i);
+                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+                        try {
+                            String result = imageClassifier.classifyFrame(scaledBitmap);
+                            System.out.println(i + " " + result);
+                        } catch (Exception e) {
+                            System.out.println("problem" + e);
+                        }
+
+                        Bitmap imageBlur = BlurFaces.blurFaces(bitmap, 50, 50, 500, 500, context);
+                        try {
+                            encoder.encodeImage(imageBlur);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                };
+            };
+            Thread mythread = new Thread(runnable);
+
+            mythread.start();
+            mythread.join();
+
+            imageClassifier.close();
+                    try {
+                        encoder.finish();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } catch(
+                final Exception e)
+
+                {
+                    System.out.println(e.getStackTrace());
+                }
+        NIOUtils.closeQuietly(out);
 
 
         // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
@@ -173,11 +222,8 @@ public class Processing extends AppCompatActivity {
             }
         }*/
 
-        Context context = getApplicationContext();
-
-        FileChannelWrapper out = null;
-        String fileName = getFileName(contentURI);
-        try {
+        //rekonstrukcija videa
+        /*try {
 
             File root= new File(Environment.getExternalStorageDirectory()+VIDEO_DIRECTORY);
             File dir = new File(root.getAbsolutePath());
@@ -214,7 +260,7 @@ public class Processing extends AppCompatActivity {
             e.printStackTrace();
         } finally {
             NIOUtils.closeQuietly(out);
-        }
+        }*/
 
         Uri uri = Uri.parse(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY + "/" + fileName);
 

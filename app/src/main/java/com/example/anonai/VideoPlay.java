@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.VideoView;
 import android.net.Uri;
 
+import java.io.File;
+
 public class VideoPlay extends AppCompatActivity {
 
     private VideoView videoView;
@@ -31,6 +33,19 @@ public class VideoPlay extends AppCompatActivity {
 
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI1");
+
+        String fullVideoName = contentURI.toString();
+        String videoName =
+
+        File mydir = this.getDir("Videos", this.MODE_PRIVATE);
+
+        File fileWithinMyDir = new File(mydir, videoName);
+
+        fileWithinMyDir.setReadable(true, false);
+
+        String videoResource = fileWithinMyDir.getPath();
+
+        Uri intentUri = Uri.fromFile(new File(videoResource));
 
         videoView.setVideoURI(contentURI);
         videoView.requestFocus();

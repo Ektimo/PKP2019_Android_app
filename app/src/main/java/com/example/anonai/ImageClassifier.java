@@ -113,17 +113,17 @@ public class ImageClassifier {
         }
         convertBitmapToByteBuffer(bitmap);
         // Here's where the magic happens!!!
-        long startTime = SystemClock.uptimeMillis();
+        //long startTime = SystemClock.uptimeMillis();
         tflite.run(imgData, labelProbArray);
-        long endTime = SystemClock.uptimeMillis();
-        Log.d(TAG, "Timecost to run model inference: " + Long.toString(endTime - startTime));
+        //long endTime = SystemClock.uptimeMillis();
+        //Log.d(TAG, "Timecost to run model inference: " + Long.toString(endTime - startTime));
 
         // smooth the results
         applyFilter();
 
         // print the results
         String textToShow = printTopKLabels();
-        textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
+        //textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
         return textToShow;
     }
 
@@ -199,7 +199,7 @@ public class ImageClassifier {
             }
         }
         long endTime = SystemClock.uptimeMillis();
-        Log.d(TAG, "Timecost to put values into ByteBuffer: " + Long.toString(endTime - startTime));
+        //Log.d(TAG, "Timecost to put values into ByteBuffer: " + Long.toString(endTime - startTime));
     }
 
     /** Prints top-K labels, to be shown in UI as the results. */
