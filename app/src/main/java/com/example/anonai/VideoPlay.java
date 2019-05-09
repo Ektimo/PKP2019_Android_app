@@ -39,6 +39,7 @@ public class VideoPlay extends AppCompatActivity {
 
         String fullVideoName = contentURI.toString();
 
+
         String videoName =  intent.getStringExtra("videoName");
 
         //File mydir = this.getDir("Videos", this.MODE_PRIVATE);
