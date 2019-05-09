@@ -138,6 +138,7 @@ public class Processing extends AppCompatActivity {
                 dir.mkdir();
             }
             File file = new File(dir, fileName);
+            file.setReadable(true, false);
             String path = file.getAbsolutePath();
             out = NIOUtils.writableFileChannel(path);
             // for Android use: AndroidSequenceEncoder
@@ -149,11 +150,17 @@ public class Processing extends AppCompatActivity {
             } catch (final IOException e) {
                 System.out.println(e.getStackTrace());
             }
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Runnable runnable = new Runnable() {
 
-                public void run() {
+                public void run(){
                     for (int i = 0; i < numeroFrameCaptured; i++) {
                         frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
+                        System.out.println(i);
 
                         Bitmap bitmap = frameList.get(i);
                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
@@ -171,6 +178,11 @@ public class Processing extends AppCompatActivity {
                             e1.printStackTrace();
                         }
                     }
+                    try {
+                        encoder.finish();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 };
             };
             Thread mythread = new Thread(runnable);
@@ -179,11 +191,7 @@ public class Processing extends AppCompatActivity {
             mythread.join();
 
             imageClassifier.close();
-                    try {
-                        encoder.finish();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+
                 } catch(
                 final Exception e)
 
@@ -263,6 +271,7 @@ public class Processing extends AppCompatActivity {
         }*/
 
         Uri uri = Uri.parse(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY + "/" + fileName);
+
 
         Intent intent2 = new Intent(Processing.this, VideoPlay.class);
         intent2.putExtra("videoURI1", uri);

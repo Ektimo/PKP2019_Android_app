@@ -46,15 +46,17 @@ public class VideoPlay extends AppCompatActivity {
         File mydir = new File(root.getAbsolutePath());
 
         File fileWithinMyDir = new File(mydir, videoName);
-        System.out.println(fileWithinMyDir);
+        //System.out.println(fileWithinMyDir);
 
-        fileWithinMyDir.setReadable(true, false);
+
 
         String videoResource = fileWithinMyDir.getPath();
 
         Uri intentUri = Uri.fromFile(new File(videoResource));
 
-        videoView.setVideoURI(intentUri);
+
+
+        videoView.setVideoURI( intentUri);
         videoView.requestFocus();
         videoView.start();
 
