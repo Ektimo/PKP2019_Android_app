@@ -63,12 +63,14 @@ public class ImageClassifier {
     private static final float IMAGE_STD = 128.0f;
 
 
+
     /* Preallocated buffers for storing image data in. */
     private int[] intValues = new int[DIM_IMG_SIZE_X * DIM_IMG_SIZE_Y];
 
     /** An instance of the driver class to run model inference with Tensorflow Lite. */
     private Interpreter tflite;
 
+    //public static final Interpreter.Options tfliteOptions = new Interpreter.Options();
     /** Labels corresponding to the output of the vision model. */
     private List<String> labelList;
 

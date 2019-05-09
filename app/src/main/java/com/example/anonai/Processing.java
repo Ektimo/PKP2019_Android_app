@@ -26,6 +26,7 @@ import org.jcodec.api.android.AndroidSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Rational;
+import org.tensorflow.lite.Interpreter;
 
 import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+//import static com.example.anonai.ImageClassifier.tfliteOptions;
 
 
 public class Processing extends AppCompatActivity {
@@ -144,17 +147,19 @@ public class Processing extends AppCompatActivity {
             // for Android use: AndroidSequenceEncoder
             final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
 
+
+            //tfliteOptions.setNumThreads(10);
+
+            //ImageClassifier.tflite = new Interpreter(tfliteModel, tfliteOptions);
+
+
             // .tflite model
             try {
                 imageClassifier = new ImageClassifier(this);
             } catch (final IOException e) {
                 System.out.println(e.getStackTrace());
             }
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             Runnable runnable = new Runnable() {
 
                 public void run(){
