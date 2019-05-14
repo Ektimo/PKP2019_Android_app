@@ -43,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
     private Button btn2;
     //private Button btn4;
     private Button btn3;
+    private Button btn5;
     private VideoView videoView;
     private static final String VIDEO_DIRECTORY = "/anonai";
     private int GALLERY = 1, CAMERA = 2;
+    private int LIVE_CAMERA = 3;
     public static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
     @Override
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         btn2 = (Button) findViewById(R.id.button2);
         btn3 = (Button) findViewById(R.id.button3);
         //btn4 = (Button) findViewById(R.id.button4);
+        btn5 = (Button) findViewById(R.id.button5);
         //videoView = (VideoView) findViewById(R.id.vv);
 
         btn2.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +77,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLiveDetection();
+
+            }
+        });
+
         /* Gumb za prenos modela
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+    }
+
+    public void startLiveDetection() {
+        Intent liveCameraIntent = new Intent(MainActivity.this, LiveCamera.class);
+        startActivity(liveCameraIntent);
+        finish();
     }
 
     public  boolean isPermissionGranted() {
@@ -165,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
             videoView.requestFocus();
             videoView.start();}
 
+        } else if (requestCode == LIVE_CAMERA) {
+            Intent intent = new Intent(MainActivity.this, LiveCamera.class);
+            startActivity(intent);
         }
 
     }

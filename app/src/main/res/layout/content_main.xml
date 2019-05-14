@@ -14,14 +14,15 @@
         android:layout_width="150dp"
         android:layout_height="67dp"
         android:layout_marginStart="39dp"
+        android:layout_marginTop="127dp"
         android:layout_marginEnd="41dp"
         android:background="@color/colorPrimaryDark"
-        android:text="Live"
+        android:text="Record video"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.921" />
+        app:layout_constraintTop_toBottomOf="@+id/button5"
+        app:layout_constraintVertical_bias="0.328" />
 
     <Button
         android:id="@+id/button3"
@@ -33,6 +34,15 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button2" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:text="LIVE"
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        tools:layout_editor_absoluteY="190dp" />
 
 
     <!--<Button
@@ -49,5 +59,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />-->
+
 
 </android.support.constraint.ConstraintLayout>
