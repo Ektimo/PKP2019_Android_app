@@ -71,6 +71,7 @@ public class ImageClassifier {
     private Interpreter tflite;
 
     //public static final Interpreter.Options tfliteOptions = new Interpreter.Options();
+
     /** Labels corresponding to the output of the vision model. */
     private List<String> labelList;
 
