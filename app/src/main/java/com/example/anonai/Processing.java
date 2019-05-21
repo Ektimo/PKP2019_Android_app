@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Processing extends AppCompatActivity {
-    public static final int INPUT_SIZE = 224;
+    public static final int INPUT_SIZE = 300;
     public static final int IMAGE_MEAN = 117;
     public static final float IMAGE_STD = 1;
     public static final String INPUT_NAME = "input";
@@ -49,13 +49,13 @@ public class Processing extends AppCompatActivity {
     //private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/assets/tensorflow_inception_graph.pb";
     //private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/assets/imagenet_comp_graph_label_strings.txt";
 
-    public static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-    public static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
+    //public static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
+    //public static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
 
-    //public static final String MODEL_FILE = "file:///android_asset/detect.tflite";
-    //public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
+    public static final String MODEL_FILE = "detect.tflite";
+    public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
 
-    public Classifier classifier;
+    public Classifier2 classifier;
     public ImageClassifier imageClassifier;
     public Executor executor = Executors.newSingleThreadExecutor();
     private CameraView cameraView;
@@ -130,6 +130,8 @@ public class Processing extends AppCompatActivity {
         FileChannelWrapper out = null;
         String fileName = getFileName(contentURI);
 
+        initTensorFlowAndLoadModel();
+
 
         try {
             File root = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
@@ -154,11 +156,11 @@ public class Processing extends AppCompatActivity {
 
 
             // .tflite model
-            try {
+            /*try {
                 imageClassifier = new ImageClassifier(this);
             } catch (final IOException e) {
                 System.out.println(e.getStackTrace());
-            }
+            }*/
 
             Runnable runnable = new Runnable() {
 
@@ -169,12 +171,22 @@ public class Processing extends AppCompatActivity {
 
                         Bitmap bitmap = frameList.get(i);
                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-                        try {
+                        /*try {
                             String result = imageClassifier.classifyFrame(scaledBitmap);
                             System.out.println(i + " " + result);
                         } catch (Exception e) {
                             System.out.println("problem" + e);
+                        }*/
+
+                        try {
+                            List<Classifier2.Recognition> results = classifier.recognizeImage(scaledBitmap);
+                            System.out.println(results.toString());
+                            //textViewResult.setText(results.toString());
                         }
+                        catch (Exception e){
+                            System.out.println("problem" + e);
+                        }
+
 
                         Bitmap imageBlur = BlurFaces.blurFaces(bitmap, 50, 50, 500, 500, context);
                         try {
@@ -317,15 +329,12 @@ public class Processing extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        classifier = TensorFlowImageClassifier.create(
+                        classifier = TFLiteObjectDetectionAPIModel.create(
                                 getAssets(),
                                 MODEL_FILE,
                                 LABEL_FILE,
                                 INPUT_SIZE,
-                                IMAGE_MEAN,
-                                IMAGE_STD,
-                                INPUT_NAME,
-                                OUTPUT_NAME);
+                                true);
                        // makeButtonVisible();
                     } catch (final Exception e) {
                         throw new RuntimeException("Error initializing TensorFlow!", e);
