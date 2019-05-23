@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.RectF;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class Processing extends AppCompatActivity {
     public static final String INPUT_NAME = "input";
     public static final String OUTPUT_NAME = "output";
     private static final String VIDEO_DIRECTORY = "/anonai";
+    public static final float MIN_CONFIDENCE = 0.4f;
 
     //private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/assets/tensorflow_inception_graph.pb";
     //private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/assets/imagenet_comp_graph_label_strings.txt";
@@ -185,20 +187,28 @@ public class Processing extends AppCompatActivity {
                             List<Classifier2.Recognition> results = classifier.recognizeImage(scaledBitmap);
                             System.out.println(results.toString());
                             int numOfRes = results.size();
-                            List<List<Integer>> CordsInt = new ArrayList<List<Integer>>();
-                            for (int j = 0; j < numOfRes; j++){
-                                String res = results.get(j).toString();
-                                int start = res.lastIndexOf("(");
-                                int end = res.lastIndexOf(")");
-                                String cords = res.substring(start+1, end);
-                                final StringTokenizer strTokenizer = new StringTokenizer(cords, ",");
+                            List<Classifier2.Recognition> dobriRes = new ArrayList<Classifier2.Recognition>();
 
-                                final List<Float> cordsFloat = new ArrayList<Float>();
-                                while (strTokenizer.hasMoreTokens()) {
-                                    cordsFloat.add(Float.valueOf(strTokenizer.nextToken()));
-
+                            for (int k=0; k<numOfRes; k++){
+                                if (results.get(k).getConfidence() > MIN_CONFIDENCE){
+                                    dobriRes.add(results.get(k));
+                                } else {
+                                    break;
                                 }
-                                CordsInt.add(popraviCords(cordsFloat,oriSizeX,oriSizeY,INPUT_SIZE));
+
+                            }
+
+                            List<List<Integer>> CordsInt = new ArrayList<List<Integer>>();
+
+                            int numOfDobri = dobriRes.size();
+                            for (int j = 0; j < numOfDobri; j++){
+
+                                Classifier2.Recognition res = results.get(j);
+
+                                RectF cords = res.getLocation();
+
+
+                                CordsInt.add(popraviCords(cords,oriSizeX,oriSizeY,INPUT_SIZE));
 
 
 
@@ -409,12 +419,12 @@ public String  getPath(Uri uri) {
         return null;
 }
 
-public List<Integer> popraviCords (List<Float> cords, int startSizeX, int startSizeY, int endSize){
+public List<Integer> popraviCords (RectF cords, int startSizeX, int startSizeY, int endSize){
     List<Integer> popC = new ArrayList<>();
-    popC.add(Math.round(cords.get(0)*startSizeX/endSize));
-    popC.add(Math.round(cords.get(1)*startSizeY/endSize));
-    popC.add(Math.round(cords.get(2)*startSizeX/endSize));
-    popC.add(Math.round(cords.get(3)*startSizeY/endSize));
+    popC.add(Math.round(cords.left*startSizeX/endSize));
+    popC.add(Math.round(cords.top*startSizeY/endSize));
+    popC.add(Math.round(cords.right*startSizeX/endSize));
+    popC.add(Math.round(cords.bottom*startSizeY/endSize));
     return popC;
 
 }
