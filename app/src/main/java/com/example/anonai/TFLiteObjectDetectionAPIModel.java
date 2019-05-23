@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class TFLiteObjectDetectionAPIModel implements Classifier2 {
+public class TFLiteObjectDetectionAPIModel implements Classifier {
 
     // Only return this many results.
     private static final int NUM_DETECTIONS = 10;
@@ -77,7 +77,7 @@ public class TFLiteObjectDetectionAPIModel implements Classifier2 {
      * @param inputSize The size of image input
      * @param isQuantized Boolean representing model is quantized or not
      */
-    public static Classifier2 create(
+    public static Classifier create(
             final AssetManager assetManager,
             final String modelFilename,
             final String labelFilename,

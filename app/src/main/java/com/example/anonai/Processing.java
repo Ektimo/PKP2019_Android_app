@@ -17,51 +17,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import com.wonderkiln.camerakit.CameraView;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.jcodec.api.android.AndroidSequenceEncoder;
 import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Rational;
-import org.tensorflow.lite.Interpreter;
 
-import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-//import static com.example.anonai.ImageClassifier.tfliteOptions;
 
 
 public class Processing extends AppCompatActivity {
     public static final int INPUT_SIZE = 300;
-    public static final int IMAGE_MEAN = 117;
-    public static final float IMAGE_STD = 1;
     public static final String INPUT_NAME = "input";
     public static final String OUTPUT_NAME = "output";
     private static final String VIDEO_DIRECTORY = "/anonai";
-    public static final float MIN_CONFIDENCE = 0.4f;
-
-    //private static final String MODEL_FILE = Environment.getExternalStorageDirectory() + "/assets/tensorflow_inception_graph.pb";
-    //private static final String LABEL_FILE = Environment.getExternalStorageDirectory() + "/assets/imagenet_comp_graph_label_strings.txt";
-
-    //public static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-    //public static final String LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
+    public static final float MIN_CONFIDENCE = 0.5f;
 
     public static final String MODEL_FILE = "detect.tflite";
     public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
 
-    public Classifier2 classifier;
-    public ImageClassifier imageClassifier;
+    public Classifier classifier;
     public Executor executor = Executors.newSingleThreadExecutor();
-    private CameraView cameraView;
+
     private TextView textViewResult;
 
     @SuppressLint("NewApi")
@@ -79,17 +62,6 @@ public class Processing extends AppCompatActivity {
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
 
-        // .pb model
-        /*initTensorFlowAndLoadModel();
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Ustvaril classifier");*/
-
-        // Koda za zajem slik z videa
-
         final ArrayList<Bitmap> frameList = new ArrayList<>();
 
         // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
@@ -103,30 +75,13 @@ public class Processing extends AppCompatActivity {
         } catch (Exception e) {
             System.out.println("Exception= " + e);
         }
+
         String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
         final int NOF = Integer.parseInt(numberOfFrames);
         int duration_millisec = Integer.parseInt(duration); //duration in millisec
-        int frames_per_second = 10;  //no. of frames want to retrieve per second
-        final int numeroFrameCaptured = frames_per_second * (duration_millisec / 1000);
-
-
-
-        // .pb model
-        /*for (int i = 0; i < numeroFrameCaptured; i++) {
-            frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
-            System.out.println("dodal " + i);
-
-            Bitmap bitmap = frameList.get(i);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-            try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
-                System.out.println(i + " " + results.toString());
-                textViewResult.setText(results.toString());
-            }
-            catch (Exception e){
-                System.out.println("problem" + e);
-            }
-        }*/
+        int frames_per_second = 20;  //no. of frames want to retrieve per second
+        final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
 
         final Context context = getApplicationContext();
 
@@ -155,16 +110,6 @@ public class Processing extends AppCompatActivity {
 
             //tfliteOptions.setNumThreads(10);
 
-            //ImageClassifier.tflite = new Interpreter(tfliteModel, tfliteOptions);
-
-
-            // .tflite model
-            /*try {
-                imageClassifier = new ImageClassifier(this);
-            } catch (final IOException e) {
-                System.out.println(e.getStackTrace());
-            }*/
-
             Runnable runnable = new Runnable() {
 
                 public void run(){
@@ -176,18 +121,12 @@ public class Processing extends AppCompatActivity {
                         int oriSizeX = bitmap.getWidth();
                         int oriSizeY = bitmap.getHeight();
                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-                        /*try {
-                            String result = imageClassifier.classifyFrame(scaledBitmap);
-                            System.out.println(i + " " + result);
-                        } catch (Exception e) {
-                            System.out.println("problem" + e);
-                        }*/
 
                         try {
-                            List<Classifier2.Recognition> results = classifier.recognizeImage(scaledBitmap);
+                            List<Classifier.Recognition> results = classifier.recognizeImage(scaledBitmap);
                             System.out.println(results.toString());
                             int numOfRes = results.size();
-                            List<Classifier2.Recognition> dobriRes = new ArrayList<Classifier2.Recognition>();
+                            List<Classifier.Recognition> dobriRes = new ArrayList<Classifier.Recognition>();
 
                             for (int k=0; k<numOfRes; k++){
                                 if (results.get(k).getConfidence() > MIN_CONFIDENCE){
@@ -203,23 +142,25 @@ public class Processing extends AppCompatActivity {
                             int numOfDobri = dobriRes.size();
                             for (int j = 0; j < numOfDobri; j++){
 
-                                Classifier2.Recognition res = results.get(j);
+                                Classifier.Recognition res = results.get(j);
 
                                 RectF cords = res.getLocation();
 
 
                                 CordsInt.add(popraviCords(cords,oriSizeX,oriSizeY,INPUT_SIZE));
 
-
-
                             }
-                            Bitmap imageBlur = BlurFaces.blurFaces(bitmap,CordsInt,context);
-                            encoder.encodeImage(imageBlur);
+                            if (numOfDobri == 0) {
+                                encoder.encodeImage(bitmap);
+                            } else {
+                                Bitmap imageBlur = BlurFaces.blurFaces(bitmap, CordsInt, context);
+                                encoder.encodeImage(imageBlur);
+                            }
 
 
 
 
-                            //textViewResult.setText(results.toString());
+                            //textViewResult.setText(dobriRes.toString());
                         }
                         catch (Exception e){
                             System.out.println("problem" + e);
@@ -239,96 +180,18 @@ public class Processing extends AppCompatActivity {
             mythread.start();
             mythread.join();
 
-            imageClassifier.close();
-
-                } catch(
-                final Exception e)
-
-                {
-                    System.out.println(e.getStackTrace());
-                }
+        } catch (final Exception e) {
+            System.out.println(e);
+        }
         NIOUtils.closeQuietly(out);
 
-
-        // trenutno printa seznam zaznanih objektov in verjetnosti, včasih se sesuje
-
-
-        /*for (int i = 0; i < numeroFrameCaptured; i++) {
-            Bitmap bitmap = frameList.get(i);
-            Bitmap bitmap1 = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-            *//*try {
-                TimeUnit.MILLISECONDS.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*//*
-
-            *//*try {
-                ImageClassifier classifier = new ImageClassifier(this);
-                String results = classifier.classifyFrame(bitmap1);
-                System.out.println(results);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*//*
-
-            try {List<Classifier.Recognition> results = classifier.recognizeImage(bitmap1);
-                System.out.println(i + " " + results.toString());
-                textViewResult.setText(results.toString());
-             }
-            catch (Exception e){
-                System.out.println("problem" + e);
-            }
-        }*/
-
-        //rekonstrukcija videa
-        /*try {
-
-            File root= new File(Environment.getExternalStorageDirectory()+VIDEO_DIRECTORY);
-            File dir = new File(root.getAbsolutePath());
-            System.out.println(dir);
-
-
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            File file = new File(dir, fileName);
-            String path = file.getAbsolutePath();
-            out = NIOUtils.writableFileChannel(path);
-            // for Android use: AndroidSequenceEncoder
-            AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000))); // video je nekaj sekund krajši, 8s -> 7s. 5s-> 3s?????
-            for (int i = 0; i < numeroFrameCaptured; i++) {
-                // Generate the image, for Android use Bitmap
-                Bitmap image = frameList.get(i);
-
-
-                Bitmap imageBlur = BlurFaces.blurFaces(image, 50, 50, 500, 500, context);
-                // Encode the image
-                try {
-                    TimeUnit.MILLISECONDS.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                };
-                encoder.encodeImage(imageBlur);
-            }
-            // Finalize the encoding, i.e. clear the buffers, write the header, etc.
-            encoder.finish();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            NIOUtils.closeQuietly(out);
-        }*/
-
         Uri uri = Uri.parse(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY + "/" + fileName);
-
 
         Intent intent2 = new Intent(Processing.this, VideoPlay.class);
         intent2.putExtra("videoURI1", uri);
 
         intent2.putExtra("videoName", fileName);
         startActivity(intent2);
-
-
 
     }
 
@@ -421,10 +284,10 @@ public String  getPath(Uri uri) {
 
 public List<Integer> popraviCords (RectF cords, int startSizeX, int startSizeY, int endSize){
     List<Integer> popC = new ArrayList<>();
-    popC.add(Math.round(cords.left*startSizeX/endSize));
-    popC.add(Math.round(cords.top*startSizeY/endSize));
-    popC.add(Math.round(cords.right*startSizeX/endSize));
-    popC.add(Math.round(cords.bottom*startSizeY/endSize));
+    popC.add(Math.max(Math.round(cords.left*startSizeX/endSize),0));
+    popC.add(Math.max(Math.round(cords.top*startSizeY/endSize),0));
+    popC.add(Math.min(Math.round(cords.right*startSizeX/endSize), startSizeX));
+    popC.add(Math.min(Math.round(cords.bottom*startSizeY/endSize), startSizeY));
     return popC;
 
 }
