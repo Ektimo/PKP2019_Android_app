@@ -31,6 +31,7 @@ import org.tensorflow.lite.Interpreter;
 import java.nio.channels.SeekableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -170,6 +171,8 @@ public class Processing extends AppCompatActivity {
                         System.out.println(i);
 
                         Bitmap bitmap = frameList.get(i);
+                        int oriSizeX = bitmap.getWidth();
+                        int oriSizeY = bitmap.getHeight();
                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
                         /*try {
                             String result = imageClassifier.classifyFrame(scaledBitmap);
@@ -181,6 +184,31 @@ public class Processing extends AppCompatActivity {
                         try {
                             List<Classifier2.Recognition> results = classifier.recognizeImage(scaledBitmap);
                             System.out.println(results.toString());
+                            int numOfRes = results.size();
+                            List<List<Integer>> CordsInt = new ArrayList<List<Integer>>();
+                            for (int j = 0; j < numOfRes; j++){
+                                String res = results.get(j).toString();
+                                int start = res.lastIndexOf("(");
+                                int end = res.lastIndexOf(")");
+                                String cords = res.substring(start+1, end);
+                                final StringTokenizer strTokenizer = new StringTokenizer(cords, ",");
+
+                                final List<Float> cordsFloat = new ArrayList<Float>();
+                                while (strTokenizer.hasMoreTokens()) {
+                                    cordsFloat.add(Float.valueOf(strTokenizer.nextToken()));
+
+                                }
+                                CordsInt.add(popraviCords(cordsFloat,oriSizeX,oriSizeY,INPUT_SIZE));
+
+
+
+                            }
+                            Bitmap imageBlur = BlurFaces.blurFaces(bitmap,CordsInt,context);
+                            encoder.encodeImage(imageBlur);
+
+
+
+
                             //textViewResult.setText(results.toString());
                         }
                         catch (Exception e){
@@ -188,12 +216,6 @@ public class Processing extends AppCompatActivity {
                         }
 
 
-                        Bitmap imageBlur = BlurFaces.blurFaces(bitmap, 50, 50, 500, 500, context);
-                        try {
-                            encoder.encodeImage(imageBlur);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
                     }
                     try {
                         encoder.finish();
@@ -387,5 +409,13 @@ public String  getPath(Uri uri) {
         return null;
 }
 
+public List<Integer> popraviCords (List<Float> cords, int startSizeX, int startSizeY, int endSize){
+    List<Integer> popC = new ArrayList<>();
+    popC.add(Math.round(cords.get(0)*startSizeX/endSize));
+    popC.add(Math.round(cords.get(1)*startSizeY/endSize));
+    popC.add(Math.round(cords.get(2)*startSizeX/endSize));
+    popC.add(Math.round(cords.get(3)*startSizeY/endSize));
+    return popC;
 
+}
 }

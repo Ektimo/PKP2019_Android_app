@@ -11,20 +11,29 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
+import java.util.List;
+
 import static java.security.AccessController.getContext;
 
 public class BlurFaces {
-    public static Bitmap blurFaces(Bitmap bitmap, int x1, int  y1, int x2, int  y2, Context context ){
-        // odrežemo vse kar ni obraz
-        Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, x1, y1, x2 - x1, y2-y1);
+    public static Bitmap blurFaces(Bitmap bitmap, List<List<Integer>> cords, Context context ){
+        Bitmap bmOverlay = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bitmap, new Matrix(), null);
+        for (int i = 0; i < cords.size(); i++) {
+            // odrežemo vse kar ni obraz
+            List<Integer> cord = cords.get(i);
+            Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, cord.get(0), cord.get(1), cord.get(2) -cord.get(0), cord.get(3) - cord.get(1));
 
-        //bluranje slike
+            //bluranje slike
 
-        Bitmap blurBitmap = blurBitmap(context, croppedBitmap);
+            Bitmap blurBitmap = blurBitmap(context, croppedBitmap);
 
-        // vrne frame z zablurabim obrazom
+            // vrne frame z zablurabim obrazom
+            canvas.drawBitmap(blurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
+        }
+        return bmOverlay;
 
-        return overlay(bitmap, blurBitmap, x1, y1 , x2, y2);
 
     };
 
@@ -71,11 +80,11 @@ public class BlurFaces {
         return outBitmap;
 
     }
-    private static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int x1, int  y1, int x2, int  y2) {
+/*    private static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int x1, int  y1, int x2, int  y2) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(bmp1, new Matrix(), null);
         canvas.drawBitmap(bmp2, null, new Rect(x1, y1, x2, y2), null);
         return bmOverlay;
-    }
+    }*/
 }
