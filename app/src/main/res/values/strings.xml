@@ -12,4 +12,7 @@
     <string name="downloadCompleted">Download Completed…</string>
     <string name="downloadFailed">Download Failed…</string>
     <string name="downloadAgain">Download Again</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 </resources>

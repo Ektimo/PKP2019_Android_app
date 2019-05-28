@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startLiveDetection() {
-        Intent liveCameraIntent = new Intent(MainActivity.this, LiveCamera.class);
+        Intent liveCameraIntent = new Intent(MainActivity.this, DetectorActivity.class);
         startActivity(liveCameraIntent);
         finish();
     }
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             videoView.start();}
 
         } else if (requestCode == LIVE_CAMERA) {
-            Intent intent = new Intent(MainActivity.this, LiveCamera.class);
+            Intent intent = new Intent(MainActivity.this, DetectorActivity.class);
             startActivity(intent);
         }
 
