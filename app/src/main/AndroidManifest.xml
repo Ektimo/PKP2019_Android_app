@@ -37,7 +37,7 @@
         </activity>
         <activity
             android:name=".Splash"
-            android:label="Splash"
+            android:label="AnonAI"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
