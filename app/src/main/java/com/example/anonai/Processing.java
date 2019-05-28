@@ -15,7 +15,10 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.FrameStats;
 import android.widget.TextView;
+
+//import com.arthenica.mobileffmpeg.FFmpeg;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import wseemann.media.FFmpegMediaMetadataRetriever;
 
 
 public class Processing extends AppCompatActivity {
@@ -61,11 +65,18 @@ public class Processing extends AppCompatActivity {
 
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
+        String fileName = getFileName(contentURI);
+
 
         final ArrayList<Bitmap> frameList = new ArrayList<>();
 
         // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
-        final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        final FFmpegMediaMetadataRetriever retriever = new FFmpegMediaMetadataRetriever();
+
+        final Context context = getApplicationContext();
+
+        //FFmpeg.execute("-i /storage/emulated/0/DCIM/Camera/VID_20190423_124214.mp4 -ss 00:00:03.000 -vframes 1 /storage/emulated/0/DCIM/Camera/thumb.jpg");
+
 
 
         try {
@@ -76,17 +87,15 @@ public class Processing extends AppCompatActivity {
             System.out.println("Exception= " + e);
         }
 
-        String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
-        final int NOF = Integer.parseInt(numberOfFrames);
-        int duration_millisec = Integer.parseInt(duration); //duration in millisec
-        int frames_per_second = 20;  //no. of frames want to retrieve per second
-        final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
+        String duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
+        //String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
+        //final int NOF = Integer.parseInt(numberOfFrames);
+        final int duration_millisec = Integer.parseInt(duration); //duration in millisec
+        final int frames_per_second = 4;  //no. of frames want to retrieve per second
+        //final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
 
-        final Context context = getApplicationContext();
 
         FileChannelWrapper out = null;
-        String fileName = getFileName(contentURI);
 
         initTensorFlowAndLoadModel();
 
@@ -105,7 +114,7 @@ public class Processing extends AppCompatActivity {
             String path = file.getAbsolutePath();
             out = NIOUtils.writableFileChannel(path);
             // for Android use: AndroidSequenceEncoder
-            final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
+            //final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
 
 
             //tfliteOptions.setNumThreads(10);
@@ -113,17 +122,21 @@ public class Processing extends AppCompatActivity {
             Runnable runnable = new Runnable() {
 
                 public void run(){
-                    for (int i = 0; i < numeroFrameCaptured; i++) {
-                        frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
+                    //for (int i = 0; i < numeroFrameCaptured; i++) {
+                    for (int i = 1; i < frames_per_second*duration_millisec/1000; i++) {
+                        //frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
+                        long t = i*1000*1000/frames_per_second;
+                        frameList.add(retriever.getScaledFrameAtTime(t, FFmpegMediaMetadataRetriever.OPTION_CLOSEST, INPUT_SIZE,INPUT_SIZE));
                         System.out.println(i);
 
                         Bitmap bitmap = frameList.get(i);
                         int oriSizeX = bitmap.getWidth();
                         int oriSizeY = bitmap.getHeight();
-                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+                        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
                         try {
-                            List<Classifier.Recognition> results = classifier.recognizeImage(scaledBitmap);
+                            List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+                            //List<Classifier.Recognition> results = classifier.recognizeImage(scaledBitmap);
                             System.out.println(results.toString());
                             int numOfRes = results.size();
                             List<Classifier.Recognition> dobriRes = new ArrayList<Classifier.Recognition>();
@@ -151,10 +164,10 @@ public class Processing extends AppCompatActivity {
 
                             }
                             if (numOfDobri == 0) {
-                                encoder.encodeImage(bitmap);
+                                //encoder.encodeImage(bitmap);
                             } else {
                                 Bitmap imageBlur = BlurFaces.blurFaces(bitmap, CordsInt, context);
-                                encoder.encodeImage(imageBlur);
+                                //encoder.encodeImage(imageBlur);
                             }
 
 
@@ -168,11 +181,11 @@ public class Processing extends AppCompatActivity {
 
 
                     }
-                    try {
+                    /*try {
                         encoder.finish();
                     } catch (IOException e1) {
                         e1.printStackTrace();
-                    }
+                    }*/
                 };
             };
             Thread mythread = new Thread(runnable);
