@@ -20,9 +20,6 @@ public class LiveCamera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_camera);
 
-        textViewResult = (TextView) findViewById(R.id.textView);
-        cameraView = (CameraView) findViewById(R.id.live_camera_image);
-
 
         Intent intent = getIntent();
     }
