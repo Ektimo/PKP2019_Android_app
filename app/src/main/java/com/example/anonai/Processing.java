@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import wseemann.media.FFmpegMediaMetadataRetriever;
+//import wseemann.media.FFmpegMediaMetadataRetriever;
 
 
 public class Processing extends AppCompatActivity {
@@ -71,7 +71,7 @@ public class Processing extends AppCompatActivity {
         final ArrayList<Bitmap> frameList = new ArrayList<>();
 
         // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
-        final FFmpegMediaMetadataRetriever retriever = new FFmpegMediaMetadataRetriever();
+        final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
         final Context context = getApplicationContext();
 
@@ -87,12 +87,12 @@ public class Processing extends AppCompatActivity {
             System.out.println("Exception= " + e);
         }
 
-        String duration = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
-        //String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
-        //final int NOF = Integer.parseInt(numberOfFrames);
+        String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
+        final int NOF = Integer.parseInt(numberOfFrames);
         final int duration_millisec = Integer.parseInt(duration); //duration in millisec
         final int frames_per_second = 4;  //no. of frames want to retrieve per second
-        //final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
+        final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
 
 
         FileChannelWrapper out = null;
@@ -114,7 +114,7 @@ public class Processing extends AppCompatActivity {
             String path = file.getAbsolutePath();
             out = NIOUtils.writableFileChannel(path);
             // for Android use: AndroidSequenceEncoder
-            //final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
+            final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
 
 
             //tfliteOptions.setNumThreads(10);
@@ -124,9 +124,9 @@ public class Processing extends AppCompatActivity {
                 public void run(){
                     //for (int i = 0; i < numeroFrameCaptured; i++) {
                     for (int i = 1; i < frames_per_second*duration_millisec/1000; i++) {
-                        //frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
-                        long t = i*1000*1000/frames_per_second;
-                        frameList.add(retriever.getScaledFrameAtTime(t, FFmpegMediaMetadataRetriever.OPTION_CLOSEST, INPUT_SIZE,INPUT_SIZE));
+                        frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
+                        //long t = i*1000*1000/frames_per_second;
+                        //frameList.add(retriever.getScaledFrameAtTime(t, MediaMetadataRetriever.OPTION_CLOSEST,INPUT_SIZE,INPUT_SIZE));
                         System.out.println(i);
 
                         Bitmap bitmap = frameList.get(i);
@@ -164,10 +164,10 @@ public class Processing extends AppCompatActivity {
 
                             }
                             if (numOfDobri == 0) {
-                                //encoder.encodeImage(bitmap);
+                                encoder.encodeImage(bitmap);
                             } else {
                                 Bitmap imageBlur = BlurFaces.blurFaces(bitmap, CordsInt, context);
-                                //encoder.encodeImage(imageBlur);
+                                encoder.encodeImage(imageBlur);
                             }
 
 
@@ -181,11 +181,11 @@ public class Processing extends AppCompatActivity {
 
 
                     }
-                    /*try {
+                    try {
                         encoder.finish();
                     } catch (IOException e1) {
                         e1.printStackTrace();
-                    }*/
+                    }
                 };
             };
             Thread mythread = new Thread(runnable);
