@@ -38,6 +38,7 @@ public class BlurFaces {
     };
 
 
+
     public static Bitmap blurBitmap(Context context, Bitmap bitmap){
 
 //Let’s create an empty bitmap with the same size of the bitmap we want to blur

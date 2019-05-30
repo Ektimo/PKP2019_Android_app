@@ -1,6 +1,7 @@
 package com.example.anonai;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -94,8 +95,8 @@ public class MultiBoxTracker {
         for (final Pair<Float, RectF> detection : screenRects) {
             final RectF rect = detection.second;
             canvas.drawRect(rect, boxPaint);
-            canvas.drawText("" + detection.first, rect.left, rect.top, textPaint);
-            borderedText.drawText(canvas, rect.centerX(), rect.centerY(), "" + detection.first);
+            //canvas.drawText("" + detection.first, rect.left, rect.top, textPaint);
+            //borderedText.drawText(canvas, rect.centerX(), rect.centerY(), "" + detection.first);
         }
 
         if (objectTracker == null) {
@@ -110,7 +111,7 @@ public class MultiBoxTracker {
 
             if (getFrameToCanvasMatrix().mapRect(trackedPos)) {
                 final String labelString = String.format("%.2f", trackedObject.getCurrentCorrelation());
-                borderedText.drawText(canvas, trackedPos.right, trackedPos.bottom, labelString);
+                //borderedText.drawText(canvas, trackedPos.right, trackedPos.bottom, labelString);
             }
         }
 
@@ -150,15 +151,19 @@ public class MultiBoxTracker {
             float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
             cornerSize = 1.0f;
             canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
+/*            Bitmap croppedBitmap = Bitmap.createBitmap(cropCopyBitmap, Math.round(location.left), Math.round(location.top),
+                    Math.round(location.right -location.left), Math.round(location.bottom - location.top));
+            Bitmap blurBitmap1 =  BlurFaces.blurBitmap(context, croppedBitmap);
+            canvas.drawBitmap(blurBitmap1, null, location, null);*/
 
-            final String labelString =
+            /*final String labelString =
                     !TextUtils.isEmpty(recognition.title)
                             ? String.format("%s %.2f", recognition.title, (100 * recognition.detectionConfidence))
-                            : String.format("%.2f", (100 * recognition.detectionConfidence));
+                            : String.format("%.2f", (100 * recognition.detectionConfidence));*/
             //            borderedText.drawText(canvas, trackedPos.left + cornerSize, trackedPos.top,
             // labelString);
-            borderedText.drawText(
-                    canvas, trackedPos.left + cornerSize, trackedPos.top, labelString + "%", boxPaint);
+           /* borderedText.drawText(
+                    canvas, trackedPos.left + cornerSize, trackedPos.top, labelString + "%", boxPaint);*/
         }
     }
 

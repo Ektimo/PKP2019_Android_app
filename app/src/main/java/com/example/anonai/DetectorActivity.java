@@ -1,10 +1,12 @@
 package com.example.anonai;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader;
@@ -185,11 +187,15 @@ public class DetectorActivity extends LiveCamera  implements ImageReader.OnImage
 
                         final List<Classifier.Recognition> mappedRecognitions =
                                 new LinkedList<Classifier.Recognition>();
-
+                        final Context context = getApplicationContext();
                         for (final Classifier.Recognition result : results) {
                             final RectF location = result.getLocation();
                             if (location != null && result.getConfidence() >= minimumConfidence) {
-                                canvas.drawRect(location, paint);
+                                //canvas.drawRect(location, paint);
+                                Bitmap croppedBitmap = Bitmap.createBitmap(cropCopyBitmap, Math.round(location.left), Math.round(location.top),
+                                        Math.round(location.right -location.left), Math.round(location.bottom - location.top));
+                                Bitmap blurBitmap1 =  BlurFaces.blurBitmap(context, croppedBitmap);
+                                canvas.drawBitmap(blurBitmap1, null, location, null);
 
                                 cropToFrameTransform.mapRect(location);
 
