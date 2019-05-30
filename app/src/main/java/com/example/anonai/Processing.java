@@ -122,8 +122,8 @@ public class Processing extends AppCompatActivity {
             Runnable runnable = new Runnable() {
 
                 public void run(){
-                    //for (int i = 0; i < numeroFrameCaptured; i++) {
-                    for (int i = 1; i < frames_per_second*duration_millisec/1000; i++) {
+                    for (int i = 0; i < numeroFrameCaptured; i++) {
+                    //for (int i = 1; i < frames_per_second*duration_millisec/1000; i++) {
                         frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
                         //long t = i*1000*1000/frames_per_second;
                         //frameList.add(retriever.getScaledFrameAtTime(t, MediaMetadataRetriever.OPTION_CLOSEST,INPUT_SIZE,INPUT_SIZE));
@@ -132,11 +132,11 @@ public class Processing extends AppCompatActivity {
                         Bitmap bitmap = frameList.get(i);
                         int oriSizeX = bitmap.getWidth();
                         int oriSizeY = bitmap.getHeight();
-                        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
                         try {
-                            List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
-                            //List<Classifier.Recognition> results = classifier.recognizeImage(scaledBitmap);
+                            //List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+                            List<Classifier.Recognition> results = classifier.recognizeImage(scaledBitmap);
                             System.out.println(results.toString());
                             int numOfRes = results.size();
                             List<Classifier.Recognition> dobriRes = new ArrayList<Classifier.Recognition>();

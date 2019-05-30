@@ -1,26 +1,68 @@
 package com.example.anonai;
 
-import android.content.Intent;
+import java.util.List;
+
+import android.app.Activity;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraDevice;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-import android.widget.VideoView;
+public class LiveCamera extends Activity implements SurfaceHolder.Callback {
 
-import com.wonderkiln.camerakit.CameraView;
-
-public class LiveCamera extends AppCompatActivity {
-
-    private CameraView cameraView;
-    private TextView textViewResult;
-
+    CameraCaptureSession mCamera;
+    CameraDevice cameraDevice;
+    SurfaceView mPreview;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_camera);
 
+        mPreview = (SurfaceView)findViewById(R.id.preview);
+        mPreview.getHolder().addCallback(this);
+        mPreview.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        Intent intent = getIntent();
+        //preglej katere argumente potrebuje funkcija
+        cameraDevice.createCaptureSession();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCamera.stopPreview();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCamera.release();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Camera.Parameters params = mCamera.getParameters();
+        List<Camera.Size> sizes = params.getSupportedPreviewSizes();
+        Camera.Size selected = sizes.get(0);
+        params.setPreviewSize(selected.width,selected.height);
+        mCamera.setParameters(params);
+
+        mCamera.startPreview();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        try {
+            mCamera.setPreviewDisplay(mPreview.getHolder());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.i("PREVIEW","surfaceDestroyed");
     }
 }
