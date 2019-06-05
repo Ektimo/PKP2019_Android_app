@@ -1,6 +1,7 @@
 package com.example.anonai;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -38,7 +39,7 @@ public class VideoPlay extends AppCompatActivity {
         String fullVideoName = contentURI.toString();
 
 
-        String videoName =  intent.getStringExtra("videoName");
+        String videoName = intent.getStringExtra("videoName");
 
         //File mydir = this.getDir("Videos", this.MODE_PRIVATE);
         File root = new File(Environment.getExternalStorageDirectory() + "/anonai");
@@ -54,19 +55,18 @@ public class VideoPlay extends AppCompatActivity {
         videoView.requestFocus();
         videoView.start();
 
-        int duration = videoView.getDuration();
-        System.out.println(duration);
-
-        new Handler().postDelayed(new Runnable() {
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void run() {
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-                Intent i = new Intent(VideoPlay.this, MainActivity.class);
-                startActivity(i);
+                        Intent i = new Intent(VideoPlay.this, MainActivity.class);
+                        startActivity(i);
+                    }
+                }, 1000);
             }
-        }, duration+1000);
-
+        });
     }
-
-
 }

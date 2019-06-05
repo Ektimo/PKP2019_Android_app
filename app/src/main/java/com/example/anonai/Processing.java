@@ -79,8 +79,8 @@ public class Processing extends AppCompatActivity {
         String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
         final int NOF = Integer.parseInt(numberOfFrames);
         final int duration_millisec = Integer.parseInt(duration); //duration in millisec
-        final int frames_per_second = 4;  //no. of frames want to retrieve per second
-        final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
+        final int frames_per_second = 10;  //no. of frames want to retrieve per second
+        final int numeroFrameCaptured = Math.min(frames_per_second * (duration_millisec / 1000), NOF);
 
         FileChannelWrapper out = null;
 
