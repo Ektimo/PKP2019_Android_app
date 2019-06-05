@@ -1,11 +1,9 @@
 package com.example.anonai;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
@@ -47,19 +45,17 @@ public class VideoPlay extends AppCompatActivity {
         File mydir = new File(root.getAbsolutePath());
 
         File fileWithinMyDir = new File(mydir, videoName);
-        //System.out.println(fileWithinMyDir);
-
-
 
         String videoResource = fileWithinMyDir.getPath();
 
         Uri intentUri = Uri.fromFile(new File(videoResource));
 
-
-
-        videoView.setVideoURI( intentUri);
+        videoView.setVideoURI(intentUri);
         videoView.requestFocus();
         videoView.start();
+
+        int duration = videoView.getDuration();
+        System.out.println(duration);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -68,7 +64,7 @@ public class VideoPlay extends AppCompatActivity {
                 Intent i = new Intent(VideoPlay.this, MainActivity.class);
                 startActivity(i);
             }
-        }, 10000);
+        }, duration+1000);
 
     }
 

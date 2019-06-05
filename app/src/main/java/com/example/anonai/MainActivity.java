@@ -2,7 +2,6 @@ package com.example.anonai;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -25,12 +24,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import android.widget.Button;
-import android.widget.Toast;
 import android.widget.VideoView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
@@ -109,17 +106,13 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.v("TAG","Permission is granted");
                 return true;
             } else {
-
-                Log.v("TAG","Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
-            Log.v("TAG","Permission is granted");
             return true;
         }
     }
@@ -151,21 +144,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (isPermissionGranted()){
-        Log.d("result",""+resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == this.RESULT_CANCELED) {
-            Log.d("what","cancel");
             return;
         }
         if (requestCode == GALLERY) {
-            Log.d("what","gale");
             if (data != null) {
                 Uri contentURI = data.getData();
-                System.out.println("-> Processing");
-
-//                Intent intent1 = new Intent(MainActivity.this, Processing.class);
-//
-//                startActivity(intent1 );
                 Intent intent = new Intent(MainActivity.this, Processing.class);
                 intent.putExtra("videoURI", contentURI);
                 startActivity(intent);
@@ -173,10 +158,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else if (requestCode == CAMERA) {
-            System.out.println("je kamera");
             Uri contentURI = data.getData();
             String recordedVideoPath = getPath(contentURI);
-            Log.d("frrr",recordedVideoPath);
             saveVideoToInternalStorage(recordedVideoPath);
             videoView.setVideoURI(contentURI);
             videoView.requestFocus();
@@ -197,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
 
             File currentFile = new File(filePath);
             File wallpaperDirectory = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
-            System.out.println(wallpaperDirectory);
             newfile = new File(wallpaperDirectory, Calendar.getInstance().getTimeInMillis() + ".mp4");
 
             if (!wallpaperDirectory.exists()) {
@@ -218,9 +200,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 in.close();
                 out.close();
-                Log.v("vii", "Video file saved successfully.");
-            }else{
-                Log.v("vii", "Video saving failed. Source file missing.");
             }
         } catch (Exception e) {
             e.printStackTrace();

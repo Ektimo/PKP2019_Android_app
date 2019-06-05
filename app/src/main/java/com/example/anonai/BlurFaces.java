@@ -1,7 +1,6 @@
 package com.example.anonai;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -13,15 +12,13 @@ import android.renderscript.ScriptIntrinsicBlur;
 
 import java.util.List;
 
-import static java.security.AccessController.getContext;
-
 public class BlurFaces {
     public static Bitmap blurFaces(Bitmap bitmap, List<List<Integer>> cords, Context context ){
         Bitmap bmOverlay = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(bitmap, new Matrix(), null);
         for (int i = 0; i < cords.size(); i++) {
-            // odrežemo vse kar ni obraz
+            // odrežemo vse kar ni obraz/prepoznan objekt
             List<Integer> cord = cords.get(i);
             Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, cord.get(0), cord.get(1), cord.get(2) -cord.get(0), cord.get(3) - cord.get(1));
 

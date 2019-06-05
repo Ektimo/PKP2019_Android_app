@@ -15,8 +15,6 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.FrameStats;
-import android.widget.TextView;
 
 //import com.arthenica.mobileffmpeg.FFmpeg;
 
@@ -49,8 +47,6 @@ public class Processing extends AppCompatActivity {
     public Classifier classifier;
     public Executor executor = Executors.newSingleThreadExecutor();
 
-    private TextView textViewResult;
-
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +55,6 @@ public class Processing extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        textViewResult = (TextView) findViewById(R.id.textViewResult);
-        //textViewResult.setMovementMethod(new ScrollingMovementMethod());
-
-
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
         String fileName = getFileName(contentURI);
@@ -70,19 +62,15 @@ public class Processing extends AppCompatActivity {
 
         final ArrayList<Bitmap> frameList = new ArrayList<>();
 
-        // MediaMetadataRetriever class is used to retrieve meta data from methods. *//*
         final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
         final Context context = getApplicationContext();
 
         //FFmpeg.execute("-i /storage/emulated/0/DCIM/Camera/VID_20190423_124214.mp4 -ss 00:00:03.000 -vframes 1 /storage/emulated/0/DCIM/Camera/thumb.jpg");
 
-
-
         try {
             //path of the video of which you want frames
             retriever.setDataSource(this, contentURI);
-            System.out.println("neki je");
         } catch (Exception e) {
             System.out.println("Exception= " + e);
         }
@@ -94,17 +82,13 @@ public class Processing extends AppCompatActivity {
         final int frames_per_second = 4;  //no. of frames want to retrieve per second
         final int numeroFrameCaptured = Math.max(frames_per_second * (duration_millisec / 1000), NOF);
 
-
         FileChannelWrapper out = null;
 
         initTensorFlowAndLoadModel();
 
-
         try {
             File root = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
             File dir = new File(root.getAbsolutePath());
-            System.out.println(dir);
-
 
             if (!dir.exists()) {
                 dir.mkdir();
@@ -115,7 +99,6 @@ public class Processing extends AppCompatActivity {
             out = NIOUtils.writableFileChannel(path);
             // for Android use: AndroidSequenceEncoder
             final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
-
 
             //tfliteOptions.setNumThreads(10);
 
@@ -135,7 +118,6 @@ public class Processing extends AppCompatActivity {
                         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
                         try {
-                            //List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
                             List<Classifier.Recognition> results = classifier.recognizeImage(scaledBitmap);
                             System.out.println(results.toString());
                             int numOfRes = results.size();
@@ -147,7 +129,6 @@ public class Processing extends AppCompatActivity {
                                 } else {
                                     break;
                                 }
-
                             }
 
                             List<List<Integer>> CordsInt = new ArrayList<List<Integer>>();
@@ -159,7 +140,6 @@ public class Processing extends AppCompatActivity {
 
                                 RectF cords = res.getLocation();
 
-
                                 CordsInt.add(popraviCords(cords,oriSizeX,oriSizeY,INPUT_SIZE));
 
                             }
@@ -170,15 +150,10 @@ public class Processing extends AppCompatActivity {
                                 encoder.encodeImage(imageBlur);
                             }
 
-
-
-
-                            //textViewResult.setText(dobriRes.toString());
                         }
                         catch (Exception e){
-                            System.out.println("problem" + e);
+                            System.out.println("Exception= " + e);
                         }
-
 
                     }
                     try {
@@ -194,7 +169,7 @@ public class Processing extends AppCompatActivity {
             mythread.join();
 
         } catch (final Exception e) {
-            System.out.println(e);
+            System.out.println("Exception= " + e);
         }
         NIOUtils.closeQuietly(out);
 
@@ -205,21 +180,7 @@ public class Processing extends AppCompatActivity {
 
         intent2.putExtra("videoName", fileName);
         startActivity(intent2);
-
     }
-
-
-/*        @Override
-        protected void onResume() {
-            super.onResume();
-            cameraView.start();
-        }
-
-        @Override
-        protected void onPause() {
-            cameraView.stop();
-            super.onPause();
-        }*/
 
         @Override
         protected void onDestroy() {
@@ -243,7 +204,6 @@ public class Processing extends AppCompatActivity {
                                 LABEL_FILE,
                                 INPUT_SIZE,
                                 true);
-                       // makeButtonVisible();
                     } catch (final Exception e) {
                         throw new RuntimeException("Error initializing TensorFlow!", e);
                     }
@@ -251,57 +211,49 @@ public class Processing extends AppCompatActivity {
             });
         }
 
-/*        private void makeButtonVisible() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    btnDetectObject.setVisibility(View.VISIBLE);
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
-            });
-        }*/
-public String getFileName(Uri uri) {
-    String result = null;
-    if (uri.getScheme().equals("content")) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            } finally {
+                cursor.close();
             }
-        } finally {
-            cursor.close();
         }
-    }
-    if (result == null) {
-        result = uri.getPath();
-        int cut = result.lastIndexOf('/');
-        if (cut != -1) {
-            result = result.substring(cut + 1);
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
         }
+        return result;
     }
-    return result;
-}
 
-public String  getPath(Uri uri) {
-    String[] projection = { MediaStore.Video.Media.DATA };
-    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-    if (cursor != null) {
-        // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-        // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    } else
-        return null;
-}
+    public String  getPath(Uri uri) {
+        String[] projection = { MediaStore.Video.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } else
+            return null;
+    }
 
-public List<Integer> popraviCords (RectF cords, int startSizeX, int startSizeY, int endSize){
-    List<Integer> popC = new ArrayList<>();
-    popC.add(Math.max(Math.round(cords.left*startSizeX/endSize),0));
-    popC.add(Math.max(Math.round(cords.top*startSizeY/endSize),0));
-    popC.add(Math.min(Math.round(cords.right*startSizeX/endSize), startSizeX));
-    popC.add(Math.min(Math.round(cords.bottom*startSizeY/endSize), startSizeY));
-    return popC;
+    public List<Integer> popraviCords (RectF cords, int startSizeX, int startSizeY, int endSize){
+        List<Integer> popC = new ArrayList<>();
+        popC.add(Math.max(Math.round(cords.left*startSizeX/endSize),0));
+        popC.add(Math.max(Math.round(cords.top*startSizeY/endSize),0));
+        popC.add(Math.min(Math.round(cords.right*startSizeX/endSize), startSizeX));
+        popC.add(Math.min(Math.round(cords.bottom*startSizeY/endSize), startSizeY));
+        return popC;
 
-}
+    }
 }

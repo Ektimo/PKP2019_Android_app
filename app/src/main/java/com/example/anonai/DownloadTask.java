@@ -1,7 +1,6 @@
 package com.example.anonai;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -16,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadTask {
-    private static final String TAG = "Download Task";
     private Context context;
     private Button buttonText;
     private String downloadUrl, downloadFileName;
@@ -28,7 +26,6 @@ public class DownloadTask {
         this.downloadUrl = downloadUrl;
 
         downloadFileName = downloadUrl.replace(Utils.mainUrl, "");//Create file name by picking download file name from URL
-        Log.e(TAG, downloadFileName);
 
         //Start Downloading Task
         new DownloadingTask().execute();
@@ -61,9 +58,6 @@ public class DownloadTask {
                             buttonText.setText(R.string.downloadAgain);//Change button text again after 3sec
                         }
                     }, 3000);
-
-                    Log.e(TAG, "Download Failed");
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -77,8 +71,6 @@ public class DownloadTask {
                         buttonText.setText(R.string.downloadAgain);
                     }
                 }, 3000);
-                Log.e(TAG, "Download Failed with Exception - " + e.getLocalizedMessage());
-
             }
 
 
@@ -93,14 +85,6 @@ public class DownloadTask {
                 c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
                 c.connect();//connect the URL Connection
 
-                //If Connection response is not OK then show Logs
-                if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
-                            + " " + c.getResponseMessage());
-
-                }
-
-
                 //Get File if SD card is present
                 if (new CheckForSDCard().isSDCardPresent()) {
 
@@ -114,7 +98,6 @@ public class DownloadTask {
                 //If File is not present create directory
                 if (!apkStorage.exists()) {
                     apkStorage.mkdir();
-                    Log.e(TAG, "Directory Created.");
                 }
 
                 outputFile = new File(apkStorage, downloadFileName);//Create Output file in Main File
@@ -122,7 +105,6 @@ public class DownloadTask {
                 //Create New File if not present
                 if (!outputFile.exists()) {
                     outputFile.createNewFile();
-                    Log.e(TAG, "File Created");
                 }
 
                 FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
@@ -144,7 +126,6 @@ public class DownloadTask {
                 //Read exception if something went wrong
                 e.printStackTrace();
                 outputFile = null;
-                Log.e(TAG, "Download Error Exception " + e.getMessage());
             }
 
             return null;

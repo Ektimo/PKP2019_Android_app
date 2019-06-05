@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.assist.AssistStructure;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 //import android.graphics.Camera;
@@ -18,6 +19,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Size;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -27,14 +29,14 @@ import static android.support.constraint.Constraints.TAG;
 
 public class LiveCamera extends Activity implements SurfaceHolder.Callback, TextureView.SurfaceTextureListener {
 
-    CameraCaptureSession mCamera;
     CameraDevice cameraDevice;
     SurfaceView mPreview;
     CameraCaptureSession mPreviewSession;
 
 
     TextureView mTextureView;
-    AssistStructure.ViewNode mPreviewSize;
+    //AssistStructure.ViewNode mPreviewSize;
+    private Size mPreviewSize;
     private Handler mBackgroundHandler;
     CaptureRequest.Builder mPreviewBuilder;
     @Override
