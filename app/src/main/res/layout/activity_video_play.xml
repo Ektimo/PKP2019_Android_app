@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
-    android:background="#0099cc"
+    android:background="#062038"
     tools:context=".VideoPlay">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
