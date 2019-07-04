@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.assist.AssistStructure;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 //import android.graphics.Camera;
@@ -44,6 +45,7 @@ public class LiveCamera extends Activity implements SurfaceHolder.Callback, Text
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_camera);
 
+        getWindow().setFormat(PixelFormat.UNKNOWN);
         mPreview = (SurfaceView)findViewById(R.id.preview);
         mPreview.getHolder().addCallback(this);
         mPreview.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);

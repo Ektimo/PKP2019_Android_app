@@ -35,14 +35,15 @@ import java.util.concurrent.Executors;
 
 
 public class Processing extends AppCompatActivity {
-    public static final int INPUT_SIZE = 300;
+    public static final int INPUT_SIZE = 320;
     public static final String INPUT_NAME = "input";
     public static final String OUTPUT_NAME = "output";
+    private static final boolean TF_OD_API_IS_QUANTIZED = true;
     private static final String VIDEO_DIRECTORY = "/anonai";
-    public static final float MIN_CONFIDENCE = 0.5f;
+    public static final float MIN_CONFIDENCE = 0.2f;
 
-    public static final String MODEL_FILE = "detect.tflite";
-    public static final String LABEL_FILE = "file:///android_asset/labelmap.txt";
+    public static final String MODEL_FILE = "face.tflite";
+    public static final String LABEL_FILE = "file:///android_asset/labels.txt";
 
     public Classifier classifier;
     public Executor executor = Executors.newSingleThreadExecutor();
@@ -203,7 +204,7 @@ public class Processing extends AppCompatActivity {
                                 MODEL_FILE,
                                 LABEL_FILE,
                                 INPUT_SIZE,
-                                true);
+                                TF_OD_API_IS_QUANTIZED);
                     } catch (final Exception e) {
                         throw new RuntimeException("Error initializing TensorFlow!", e);
                     }
