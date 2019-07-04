@@ -40,7 +40,7 @@ public class Processing extends AppCompatActivity {
     public static final String OUTPUT_NAME = "output";
     private static final boolean TF_OD_API_IS_QUANTIZED = true;
     private static final String VIDEO_DIRECTORY = "/anonai";
-    public static final float MIN_CONFIDENCE = 0.2f;
+    public static final float MIN_CONFIDENCE = 0.01f;
 
     public static final String MODEL_FILE = "face.tflite";
     public static final String LABEL_FILE = "file:///android_asset/labels.txt";
@@ -125,7 +125,7 @@ public class Processing extends AppCompatActivity {
                             List<Classifier.Recognition> dobriRes = new ArrayList<Classifier.Recognition>();
 
                             for (int k=0; k<numOfRes; k++){
-                                if (results.get(k).getConfidence() > MIN_CONFIDENCE){
+                                if (results.get(k).getConfidence() > MIN_CONFIDENCE && results.get(k).getConfidence() < 1.1f){
                                     dobriRes.add(results.get(k));
                                 } else {
                                     break;
@@ -135,22 +135,23 @@ public class Processing extends AppCompatActivity {
                             List<List<Integer>> CordsInt = new ArrayList<List<Integer>>();
 
                             int numOfDobri = dobriRes.size();
-                            for (int j = 0; j < numOfDobri; j++){
-
-                                Classifier.Recognition res = results.get(j);
-
-                                RectF cords = res.getLocation();
-
-                                CordsInt.add(popraviCords(cords,oriSizeX,oriSizeY,INPUT_SIZE));
-
-                            }
                             if (numOfDobri == 0) {
                                 encoder.encodeImage(bitmap);
                             } else {
+                                for (int j = 0; j < numOfDobri; j++) {
+
+                                    Classifier.Recognition res = results.get(j);
+
+                                    RectF cords = res.getLocation();
+
+                                    CordsInt.add(popraviCords(cords, oriSizeX, oriSizeY, INPUT_SIZE));
+
+                                }
+
                                 Bitmap imageBlur = BlurFaces.blurFaces(bitmap, CordsInt, context);
                                 encoder.encodeImage(imageBlur);
-                            }
 
+                            }
                         }
                         catch (Exception e){
                             System.out.println("Exception= " + e);
@@ -204,7 +205,8 @@ public class Processing extends AppCompatActivity {
                                 MODEL_FILE,
                                 LABEL_FILE,
                                 INPUT_SIZE,
-                                TF_OD_API_IS_QUANTIZED);
+                                TF_OD_API_IS_QUANTIZED,
+                                MIN_CONFIDENCE);
                     } catch (final Exception e) {
                         throw new RuntimeException("Error initializing TensorFlow!", e);
                     }

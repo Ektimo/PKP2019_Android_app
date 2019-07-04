@@ -33,6 +33,7 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
     // Number of threads in the java app
     private static final int NUM_THREADS = 4;
     private boolean isModelQuantized;
+    private float min_confidence;
     // Config values.
     private int inputSize;
     // Pre-allocated buffers.
@@ -82,7 +83,8 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
             final String modelFilename,
             final String labelFilename,
             final int inputSize,
-            final boolean isQuantized)
+            final boolean isQuantized,
+            final float min_confidence)
             throws IOException {
         final TFLiteObjectDetectionAPIModel d = new TFLiteObjectDetectionAPIModel();
 
@@ -106,6 +108,7 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
         }
 
         d.isModelQuantized = isQuantized;
+        d.min_confidence = min_confidence;
         // Pre-allocate buffers.
         int numBytesPerChannel;
         if (isQuantized) {
@@ -167,22 +170,23 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
         // after scaling them back to the input size.
         final ArrayList<Recognition> recognitions = new ArrayList<>(NUM_DETECTIONS);
         for (int i = 0; i < NUM_DETECTIONS; ++i) {
-            final RectF detection =
-                    new RectF(
-                            outputLocations[0][i][1] * inputSize,
-                            outputLocations[0][i][0] * inputSize,
-                            outputLocations[0][i][3] * inputSize,
-                            outputLocations[0][i][2] * inputSize);
-            // SSD Mobilenet V1 Model assumes class 0 is background class
-            // in label file and class labels start from 1 to number_of_classes+1,
-            // while outputClasses correspond to class index from 0 to number_of_classes
-            int labelOffset = 1;
-            recognitions.add(
-                    new Recognition(
-                            "" + i,
-                            labels.get((int) outputClasses[0][i] + labelOffset),
-                            outputScores[0][i],
-                            detection));
+            if (outputScores[0][i] > min_confidence && outputScores[0][i] < 1.1f) {
+                final RectF detection =
+                        new RectF(
+                                outputLocations[0][i][1] * inputSize,
+                                outputLocations[0][i][0] * inputSize,
+                                outputLocations[0][i][3] * inputSize,
+                                outputLocations[0][i][2] * inputSize);
+                // SSD Mobilenet V1 Model assumes class 0 is background class
+                // in label file and class labels start from 1 to number_of_classes+1,
+                // while outputClasses correspond to class index from 0 to number_of_classes
+                recognitions.add(
+                        new Recognition(
+                                "" + i,
+                                labels.get(1),
+                                outputScores[0][i],
+                                detection));
+            }
         }
         return recognitions;
     }
