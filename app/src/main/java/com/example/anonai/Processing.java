@@ -40,7 +40,7 @@ public class Processing extends AppCompatActivity {
     public static final String OUTPUT_NAME = "output";
     private static final boolean TF_OD_API_IS_QUANTIZED = true;
     private static final String VIDEO_DIRECTORY = "/anonai";
-    public static final float MIN_CONFIDENCE = 0.01f;
+    public static final float MIN_CONFIDENCE = 0.1f;
 
     public static final String MODEL_FILE = "face.tflite";
     public static final String LABEL_FILE = "file:///android_asset/labels.txt";
@@ -107,7 +107,7 @@ public class Processing extends AppCompatActivity {
 
                 public void run(){
                     for (int i = 0; i < numeroFrameCaptured; i++) {
-                    //for (int i = 1; i < frames_per_second*duration_millisec/1000; i++) {
+                    //for (int i = 0; i < frames_per_second*duration_millisec/1000; i++) {
                         frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
                         //long t = i*1000*1000/frames_per_second;
                         //frameList.add(retriever.getScaledFrameAtTime(t, MediaMetadataRetriever.OPTION_CLOSEST,INPUT_SIZE,INPUT_SIZE));
