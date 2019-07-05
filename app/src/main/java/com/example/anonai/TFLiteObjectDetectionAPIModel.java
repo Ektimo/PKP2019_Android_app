@@ -135,8 +135,8 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
         bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
         imgData.rewind();
-        for (int i = 0; i < inputSize; ++i) {
-            for (int j = 0; j < inputSize; ++j) {
+        for (int i = 0; i < inputSize; i++) {
+            for (int j = 0; j < inputSize; j++) {
                 int pixelValue = intValues[i * inputSize + j];
                 if (isModelQuantized) {
                     // Quantized model
@@ -169,7 +169,7 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
         // Show the best detections.
         // after scaling them back to the input size.
         final ArrayList<Recognition> recognitions = new ArrayList<>(NUM_DETECTIONS);
-        for (int i = 0; i < NUM_DETECTIONS; ++i) {
+        for (int i = 0; i < NUM_DETECTIONS; i++) {
             if (outputScores[0][i] > min_confidence && outputScores[0][i] < 1.1f) {
                 final RectF detection =
                         new RectF(

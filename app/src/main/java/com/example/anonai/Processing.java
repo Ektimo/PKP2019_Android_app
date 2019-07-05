@@ -118,7 +118,7 @@ public class Processing extends AppCompatActivity {
 
 
                     for (int i = 0; i < numeroFrameCaptured; i++) {
-                        //for (int i = 0; i < frames_per_second*duration_millisec/1000; i++) {
+                    //for (int i = 0; i < frames_per_second*duration_millisec/1000; i++) {
                         frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
                         //long t = i*1000*1000/frames_per_second;
                         //frameList.add(retriever.getScaledFrameAtTime(t, MediaMetadataRetriever.OPTION_CLOSEST,INPUT_SIZE,INPUT_SIZE));
