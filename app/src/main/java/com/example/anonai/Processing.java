@@ -11,10 +11,13 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 //import com.arthenica.mobileffmpeg.FFmpeg;
 
@@ -30,6 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
+import static android.os.Process.setThreadPriority;
 
 //import wseemann.media.FFmpegMediaMetadataRetriever;
 
@@ -54,7 +60,9 @@ public class Processing extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processing);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView textView = findViewById(R.id.processing_text);
         setSupportActionBar(toolbar);
+        ProgressBar pBar = findViewById(R.id.pBar);
 
         Intent intent = getIntent();
         Uri contentURI = intent.getParcelableExtra("videoURI");
@@ -80,34 +88,37 @@ public class Processing extends AppCompatActivity {
         String numberOfFrames = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
         final int NOF = Integer.parseInt(numberOfFrames);
         final int duration_millisec = Integer.parseInt(duration); //duration in millisec
-        final int frames_per_second = 10;  //no. of frames want to retrieve per second
+        final int frames_per_second = 5;  //no. of frames want to retrieve per second
         final int numeroFrameCaptured = Math.min(frames_per_second * (duration_millisec / 1000), NOF);
 
-        FileChannelWrapper out = null;
+        final FileChannelWrapper[] out = {null};
 
         initTensorFlowAndLoadModel();
 
-        try {
-            File root = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
-            File dir = new File(root.getAbsolutePath());
+        Runnable runnable = new Runnable() {
 
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            File file = new File(dir, fileName);
-            file.setReadable(true, false);
-            String path = file.getAbsolutePath();
-            out = NIOUtils.writableFileChannel(path);
-            // for Android use: AndroidSequenceEncoder
-            final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out, Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
+            public void run() {
+                android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
 
-            //tfliteOptions.setNumThreads(10);
+                try {
+                    File root = new File(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY);
+                    File dir = new File(root.getAbsolutePath());
 
-            Runnable runnable = new Runnable() {
+                    if (!dir.exists()) {
+                        dir.mkdir();
+                    }
+                    File file = new File(dir, fileName);
+                    file.setReadable(true, false);
+                    String path = file.getAbsolutePath();
+                    out[0] = NIOUtils.writableFileChannel(path);
+                    // for Android use: AndroidSequenceEncoder
+                    final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out[0], Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
 
-                public void run(){
+                    //tfliteOptions.setNumThreads(10);
+
+
                     for (int i = 0; i < numeroFrameCaptured; i++) {
-                    //for (int i = 0; i < frames_per_second*duration_millisec/1000; i++) {
+                        //for (int i = 0; i < frames_per_second*duration_millisec/1000; i++) {
                         frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
                         //long t = i*1000*1000/frames_per_second;
                         //frameList.add(retriever.getScaledFrameAtTime(t, MediaMetadataRetriever.OPTION_CLOSEST,INPUT_SIZE,INPUT_SIZE));
@@ -124,8 +135,8 @@ public class Processing extends AppCompatActivity {
                             int numOfRes = results.size();
                             List<Classifier.Recognition> dobriRes = new ArrayList<Classifier.Recognition>();
 
-                            for (int k=0; k<numOfRes; k++){
-                                if (results.get(k).getConfidence() > MIN_CONFIDENCE && results.get(k).getConfidence() < 1.1f){
+                            for (int k = 0; k < numOfRes; k++) {
+                                if (results.get(k).getConfidence() > MIN_CONFIDENCE && results.get(k).getConfidence() < 1.1f) {
                                     dobriRes.add(results.get(k));
                                 } else {
                                     break;
@@ -152,8 +163,9 @@ public class Processing extends AppCompatActivity {
                                 encoder.encodeImage(imageBlur);
 
                             }
-                        }
-                        catch (Exception e){
+
+                            pBar.setProgress((i+1)*100/numeroFrameCaptured);
+                        } catch (Exception e) {
                             System.out.println("Exception= " + e);
                         }
 
@@ -163,25 +175,24 @@ public class Processing extends AppCompatActivity {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                };
-            };
-            Thread mythread = new Thread(runnable);
 
-            mythread.start();
-            mythread.join();
+                } catch (final Exception e) {
+                    System.out.println("Exception= " + e);
+                }
+                NIOUtils.closeQuietly(out[0]);
 
-        } catch (final Exception e) {
-            System.out.println("Exception= " + e);
-        }
-        NIOUtils.closeQuietly(out);
+                Uri uri = Uri.parse(Environment.getExternalStorageDirectory() + VIDEO_DIRECTORY + "/" + fileName);
 
-        Uri uri = Uri.parse(Environment.getExternalStorageDirectory()+ VIDEO_DIRECTORY + "/" + fileName);
+                Intent intent2 = new Intent(Processing.this, VideoPlay.class);
+                intent2.putExtra("videoURI1", uri);
 
-        Intent intent2 = new Intent(Processing.this, VideoPlay.class);
-        intent2.putExtra("videoURI1", uri);
+                intent2.putExtra("videoName", fileName);
+                startActivity(intent2);
+            }
+        };
+        Thread mythread = new Thread(runnable);
 
-        intent2.putExtra("videoName", fileName);
-        startActivity(intent2);
+        mythread.start();
     }
 
         @Override
