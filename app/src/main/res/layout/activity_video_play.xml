@@ -8,16 +8,13 @@
     android:background="#062038"
     tools:context=".VideoPlay">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
     <VideoView
         android:id="@+id/fullscreen_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center|center_horizontal|fill|fill_horizontal|center_vertical|fill_vertical"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:layout_gravity="center"
         android:keepScreenOn="true" />
 
 </FrameLayout>

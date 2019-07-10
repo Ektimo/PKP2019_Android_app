@@ -21,8 +21,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-import android.util.Log;
-
 import android.widget.Button;
 import android.widget.VideoView;
 import java.io.File;
@@ -31,8 +29,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
-
-import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btn5;
     private VideoView videoView;
     private static final String VIDEO_DIRECTORY = "/anonai";
-    private int GALLERY = 1, CAMERA = 2;
-    private int LIVE_CAMERA = 3;
+    protected static int GALLERY = 1, CAMERA = 2;
+    protected static int LIVE_CAMERA = 3;
     public static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
     @Override
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startLiveDetection() {
-        Intent liveCameraIntent = new Intent(MainActivity.this, LiveCamera.class);
+        Intent liveCameraIntent = new Intent(MainActivity.this, LiveCamera2.class);
         startActivity(liveCameraIntent);
         finish();
     }
@@ -133,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
     /*private void loadModel() throws IOException {
         if (isConnectingToInternet()) {
-            new DownloadTask(MainActivity.this, btn4, Utils.downloadLabels);
-            new DownloadTask(MainActivity.this, btn4, Utils.downloadModel);
+            new DownloadTask(MainActivity.this, btn4, this.downloadLabels);
+            new DownloadTask(MainActivity.this, btn4, this.downloadModel);
         }
         else
             Toast.makeText(MainActivity.this, "Oops!! There is no internet connection. Please enable internet connection and try again.", Toast.LENGTH_SHORT).show();
@@ -166,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             videoView.start();}
 
         } else if (requestCode == LIVE_CAMERA) {
-            Intent intent = new Intent(MainActivity.this, LiveCamera.class);
+            Intent intent = new Intent(MainActivity.this, LiveCamera2.class);
             startActivity(intent);
         }
 

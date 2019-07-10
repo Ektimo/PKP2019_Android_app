@@ -1,6 +1,5 @@
 package com.example.anonai;
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +10,12 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-//import com.arthenica.mobileffmpeg.FFmpeg;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,16 +31,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
-import static android.os.Process.setThreadPriority;
-
-//import wseemann.media.FFmpegMediaMetadataRetriever;
-
 
 public class Processing extends AppCompatActivity {
     public static final int INPUT_SIZE = 320;
-    public static final String INPUT_NAME = "input";
-    public static final String OUTPUT_NAME = "output";
-    private static final boolean TF_OD_API_IS_QUANTIZED = true;
+    public static final boolean TF_OD_API_IS_QUANTIZED = true;
     private static final String VIDEO_DIRECTORY = "/anonai";
     public static final float MIN_CONFIDENCE = 0.1f;
 
@@ -261,7 +251,7 @@ public class Processing extends AppCompatActivity {
             return null;
     }
 
-    public List<Integer> popraviCords (RectF cords, int startSizeX, int startSizeY, int endSize){
+    public static List<Integer> popraviCords(RectF cords, int startSizeX, int startSizeY, int endSize){
         List<Integer> popC = new ArrayList<>();
         popC.add(Math.max(Math.round(cords.left*startSizeX/endSize),0));
         popC.add(Math.max(Math.round(cords.top*startSizeY/endSize),0));

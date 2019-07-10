@@ -3,7 +3,6 @@ package com.example.anonai;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 import android.os.Handler;
@@ -15,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadTask {
+    private String mainUrl = "mainUrl";
     private Context context;
     private Button buttonText;
     private String downloadUrl, downloadFileName;
@@ -25,7 +25,7 @@ public class DownloadTask {
         this.buttonText = buttonText;
         this.downloadUrl = downloadUrl;
 
-        downloadFileName = downloadUrl.replace(Utils.mainUrl, "");//Create file name by picking download file name from URL
+        downloadFileName = downloadUrl.replace(this.mainUrl, "");//Create file name by picking download file name from URL
 
         //Start Downloading Task
         new DownloadingTask().execute();
@@ -35,6 +35,7 @@ public class DownloadTask {
 
         File apkStorage = null;
         File outputFile = null;
+        private String downloadDirectory = "downloadDirectory";
 
         @Override
         protected void onPreExecute() {
@@ -90,7 +91,7 @@ public class DownloadTask {
 
                     apkStorage = new File(
                             Environment.getExternalStorageDirectory() + "/"
-                                    + Utils.downloadDirectory);
+                                    + this.downloadDirectory);
                 } else
                     Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
 

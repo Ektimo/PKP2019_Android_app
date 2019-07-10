@@ -1,15 +1,10 @@
 package com.example.anonai;
 
 import java.util.Collections;
-import java.util.List;
 
 import android.app.Activity;
-import android.app.assist.AssistStructure;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
-//import android.graphics.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
@@ -29,6 +24,8 @@ import android.view.TextureView;
 import static android.support.constraint.Constraints.TAG;
 
 public class LiveCamera extends Activity implements SurfaceHolder.Callback, TextureView.SurfaceTextureListener {
+
+    // ne dela, tega ne uporabljamo
 
     CameraDevice cameraDevice;
     SurfaceView mPreview;
