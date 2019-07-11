@@ -28,7 +28,7 @@
             android:theme="@style/FullscreenTheme"/>
         <activity
             android:name=".Processing"
-            android:label="@string/title_activity_processing"
+            android:label="AnonAI"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".VideoPlay"
@@ -56,14 +56,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".LiveCamera"
-            android:label="LiveCamera"
-            android:theme="@style/FullscreenTheme">
-            <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

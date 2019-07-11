@@ -69,4 +69,13 @@ public class VideoPlay extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(VideoPlay.this, MainActivity.class));
+        finish();
+
+    }
 }

@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
@@ -692,4 +693,12 @@ public class LiveCamera2 extends AppCompatActivity implements
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(LiveCamera2.this, MainActivity.class));
+        finish();
+
+    }
 }
