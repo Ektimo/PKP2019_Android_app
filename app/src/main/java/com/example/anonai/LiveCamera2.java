@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
@@ -42,7 +43,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         TextureView.SurfaceTextureListener {
 
     private CameraDevice mCamera;
-    private String mCameraID = "1";
+    private String mCameraID;
 
     private ImageView imageView;
 
@@ -50,12 +51,13 @@ public class LiveCamera2 extends AppCompatActivity implements
     private Size mPreviewSize;
     private CaptureRequest.Builder mPreviewBuilder;
     private ImageReader mImageReader;
+    private CameraCharacteristics characteristics;
 
     private Handler mHandler;
     private HandlerThread mThreadHandler;
 
     // size of images captured in ImageReader Callback
-    private int mImageWidth = 1920; //1920
+    private int mImageWidth = 720; //1920
     private int mImageHeight = 1080; //1080
 
     private int[] rgbBytes = null;
@@ -140,6 +142,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         try {
             // to get the manager of all cameras
             CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+            mCameraID = setUpCameraId(cameraManager);
             // to get features of the selected camera
             CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(mCameraID);
             // to get stream configuration from features
@@ -160,33 +163,29 @@ public class LiveCamera2 extends AppCompatActivity implements
                 requestCameraPermission();
                 return;
             }
+
             cameraManager.openCamera(mCameraID, mCameraDeviceStateCallback, mHandler);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // do sem ne pridemo nikoli
-            // ne vem katero kamero se uporablja, morda se da spremenit
-            // mi je uspelo prit do sem, cameraManager pravi da nima razpoložljive kamere
-
-
-            CameraCharacteristics b = cameraManager.getCameraCharacteristics("1");
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private String setUpCameraId(CameraManager manager) throws IllegalStateException, CameraAccessException {
+
+        for (int i=0; i < manager.getCameraIdList().length; i++) {
+
+            String cameraId = manager.getCameraIdList()[i];
+            characteristics = manager.getCameraCharacteristics(cameraId);
+            // We don't use a front facing camera in this sample.
+            Integer cameraDirection = characteristics.get(CameraCharacteristics.LENS_FACING);
+            if (cameraDirection != null &&
+                    cameraDirection == CameraCharacteristics.LENS_FACING_FRONT) {
+                continue;
+            }
+            return cameraId;
+        };
+        return null;
     }
 
     @Override
@@ -293,78 +292,8 @@ public class LiveCamera2 extends AppCompatActivity implements
 
 
     /*
-     *  step 5: to implement listener and access each frame
-     */
-    /*private ImageReader.OnImageAvailableListener mOnImageAvailableListener = new ImageReader.OnImageAvailableListener() {
+     *  step 5: to implement listener and access each frame */
 
-     *//*
-     *  The following method will be called every time an image is ready
-     *  be sure to use method acquireNextImage() and then close(), otherwise, the display may STOP
-     *//*
-        @Override
-        public void onImageAvailable(ImageReader reader) {
-            // get the newest frame
-            Image image = reader.acquireLatestImage();
-
-            if (image == null) {
-                return;
-            }
-
-            Image.Plane[] planes = image.getPlanes();
-
-            int width = image.getWidth();
-            int height = image.getHeight();
-
-            //byte[] bytes = yuvImageToByteArray(image);
-
-            //int[] pixels = convertYUV420_NV21toRGB8888(bytes, width, height);
-
-            //Bitmap bitmap = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888);
-
-
-//          poskus, ne dela ker "buffer not large enough for pixels"
-            *//*int pixelStride = planes[0].getPixelStride();
-            int rowStride = planes[0].getRowStride();
-            int rowPadding = rowStride - pixelStride * width;
-
-            Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ALPHA_8);
-            ByteBuffer buffer = planes[0].getBuffer();
-
-            bitmap.copyPixelsFromBuffer(buffer);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);*//*
-
-
-
-            // HERE to call jni methods
-            //grayscale output
-//            JNIUtils.GrayscaleDisplay(image.getWidth(), image.getHeight(), image.getPlanes()[0].getRowStride(), image.getPlanes()[0].getBuffer(), surface);
-
-            //RGBA output
-//            Image.Plane Y_plane = image.getPlanes()[0];
-//            int Y_rowStride = Y_plane.getRowStride();
-//            Image.Plane U_plane = image.getPlanes()[1];
-//            int UV_rowStride = U_plane.getRowStride();  //in particular, uPlane.getRowStride() == vPlane.getRowStride()
-//            Image.Plane V_plane = image.getPlanes()[2];
-//            JNIUtils.RGBADisplay(image.getWidth(), image.getHeight(), Y_rowStride, Y_plane.getBuffer(), UV_rowStride, U_plane.getBuffer(), V_plane.getBuffer(), surface);
-
-//            JNIUtils.RGBADisplay2(image.getWidth(), image.getHeight(), Y_rowStride, Y_plane.getBuffer(), U_plane.getBuffer(), V_plane.getBuffer(), surface);
-
-//            Log.d(TAG, "Y plane pixel stride: " + Y_plane.getPixelStride());
-//            Log.d(TAG, "U plane pixel stride: " + U_plane.getPixelStride());
-//            Log.d(TAG, "V plane pixel stride: " + V_plane.getPixelStride());
-
-//            Log.d(TAG, "Y plane length: " + Y_plane.getBuffer().remaining());
-//            Log.d(TAG, "U plane length: " + U_plane.getBuffer().remaining());
-//            Log.d(TAG, "V plane length: " + V_plane.getBuffer().remaining());
-
-//            Log.d(TAG, "Y plane rowStride: " + Y_rowStride);
-//            Log.d(TAG, "U plane rowStride: " + U_rowStride);
-//            Log.d(TAG, "V plane rowStride: " + V_rowStride);
-
-
-            image.close();
-        }
-    };*/
 
     private ImageReader.OnImageAvailableListener mOnImageAvailableListener = new ImageReader.OnImageAvailableListener() {
 
@@ -548,6 +477,8 @@ public class LiveCamera2 extends AppCompatActivity implements
         }
     }
 
+
+    // dela za prvo silo, ne vem zakaj je treba preskociti nekaj indeksov da se ne sesuje
     public static void convertYUV420ToARGB8888(
             byte[] yData,
             byte[] uData,
@@ -611,15 +542,17 @@ public class LiveCamera2 extends AppCompatActivity implements
         int[] a = getRgbBytes();
         rgbFrameBitmap = Bitmap.createBitmap(mImageWidth, mImageHeight, Bitmap.Config.ARGB_8888);
         rgbFrameBitmap.setPixels(a, 0, mImageWidth, 0, 0, mImageWidth, mImageHeight);
-        //System.out.println(detect(rgbFrameBitmap));
+        Bitmap blurBitmap = detect(rotateBitmap(rgbFrameBitmap, 90));
+
+        // ne dela
         runOnUiThread(new Runnable(){
             public void run() {
                 imageView.setImageBitmap(rgbFrameBitmap);
                 imageView.setVisibility(View.VISIBLE);
 
                 // to ni v redu
-                Drawable d = new BitmapDrawable(getResources(), rgbFrameBitmap);
-                mPreviewView.setBackgroundDrawable(d);
+                //Drawable d = new BitmapDrawable(getResources(), blurBitmap);
+                //mPreviewView.setBackgroundDrawable(d);
             }
         });
         postInferenceCallback.run();
@@ -630,7 +563,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         return rgbBytes;
     }
 
-    protected List<Classifier.Recognition> detect(Bitmap bitmap) {
+    protected Bitmap detect(Bitmap bitmap) {
         Context context = getApplicationContext();
 
         int oriSizeX = bitmap.getWidth();
@@ -666,7 +599,7 @@ public class LiveCamera2 extends AppCompatActivity implements
             }
 
             Bitmap imageBlur = BlurFaces.blurFaces(bitmap, CordsInt, context);
-            return dobriRes;
+            return imageBlur;
 
         } catch (Exception e) {
             System.out.println("Exception= " + e);
@@ -700,5 +633,12 @@ public class LiveCamera2 extends AppCompatActivity implements
         startActivity(new Intent(LiveCamera2.this, MainActivity.class));
         finish();
 
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }
