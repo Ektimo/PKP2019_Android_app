@@ -15,8 +15,6 @@ import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -39,6 +37,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
+
 public class LiveCamera2 extends AppCompatActivity implements
         TextureView.SurfaceTextureListener {
 
@@ -57,8 +57,8 @@ public class LiveCamera2 extends AppCompatActivity implements
     private HandlerThread mThreadHandler;
 
     // size of images captured in ImageReader Callback
-    private int mImageWidth = 720; //1920
-    private int mImageHeight = 1080; //1080
+    private int mImageWidth = 1080; //1920
+    private int mImageHeight = 1920; //1080
 
     private int[] rgbBytes = null;
     private boolean isProcessingFrame = false;
@@ -105,6 +105,7 @@ public class LiveCamera2 extends AppCompatActivity implements
     private void initView() {
         mPreviewView = (TextureView) findViewById(R.id.textureview);
         mPreviewView.setSurfaceTextureListener(this);
+        mPreviewView.setOpaque(false);
     }
 
     private void requestCameraPermission() {
@@ -307,14 +308,13 @@ public class LiveCamera2 extends AppCompatActivity implements
                 rgbBytes = new int[mImageWidth * mImageHeight];
             }
             try {
-                final Image image = reader.acquireLatestImage();
-
-                if (image == null) {
+                if (isProcessingFrame) {
                     return;
                 }
 
-                if (isProcessingFrame) {
-                    image.close();
+                final Image image = reader.acquireLatestImage();
+
+                if (image == null) {
                     return;
                 }
                 isProcessingFrame = true;
@@ -370,45 +370,6 @@ public class LiveCamera2 extends AppCompatActivity implements
         super.onPause();
     }
 
-    /**
-     * Converts YUV420 NV21 to RGB8888
-     *
-     * @param data byte array on YUV420 NV21 format.
-     * @param width pixels width
-     * @param height pixels height
-     * @return a RGB8888 pixels int array. Where each int is a pixels ARGB.
-     */
-    public static int[] convertYUV420_NV21toRGB8888(byte [] data, int width, int height) {
-        int size = width*height;
-        int offset = size;
-        int[] pixels = new int[size];
-        int u, v, y1, y2, y3, y4;
-
-        // i percorre os Y and the final pixels
-        // k percorre os pixles U e V
-        for(int i=0, k=0; i < size; i+=2, k+=2) {
-            y1 = data[i  ]&0xff;
-            y2 = data[i+1]&0xff;
-            y3 = data[width+i  ]&0xff;
-            y4 = data[width+i+1]&0xff;
-
-            u = data[offset+k  ]&0xff;
-            v = data[offset+k+1]&0xff;
-            u = u-128;
-            v = v-128;
-
-            pixels[i  ] = convertYUVtoRGB(y1, u, v);
-            pixels[i+1] = convertYUVtoRGB(y2, u, v);
-            pixels[width+i  ] = convertYUVtoRGB(y3, u, v);
-            pixels[width+i+1] = convertYUVtoRGB(y4, u, v);
-
-            if (i!=0 && (i+2)%width==0)
-                i+=width;
-        }
-
-        return pixels;
-    }
-
     private static int convertYUVtoRGB(int y, int u, int v) {
         int r,g,b;
 
@@ -421,49 +382,6 @@ public class LiveCamera2 extends AppCompatActivity implements
         return 0xff000000 | (b<<16) | (g<<8) | r;
     }
 
-    public static byte[] yuvImageToByteArray(Image image) {
-
-        assert(image.getFormat() == ImageFormat.YUV_420_888);
-
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        Image.Plane[] planes = image.getPlanes();
-        byte[] result = new byte[width * height * 3 / 2];
-
-        int stride = planes[0].getRowStride();
-        assert (1 == planes[0].getPixelStride());
-        if (stride == width) {
-            planes[0].getBuffer().get(result, 0, width*height);
-        }
-        else {
-            for (int row = 0; row < height; row++) {
-                planes[0].getBuffer().position(row*stride);
-                planes[0].getBuffer().get(result, row*width, width);
-            }
-        }
-
-        stride = planes[1].getRowStride();
-        assert (stride == planes[2].getRowStride());
-        int pixelStride = planes[1].getPixelStride();
-        assert (pixelStride == planes[2].getPixelStride());
-        byte[] rowBytesCb = new byte[stride];
-        byte[] rowBytesCr = new byte[stride];
-
-        for (int row = 0; row < height/2; row++) {
-            int rowOffset = width*height + width/2 * row;
-            planes[1].getBuffer().position(row*stride);
-            planes[1].getBuffer().get(rowBytesCb);
-            planes[2].getBuffer().position(row*stride);
-            planes[2].getBuffer().get(rowBytesCr);
-
-            for (int col = 0; col < width/2; col++) {
-                result[rowOffset + col*2] = rowBytesCr[col*pixelStride];
-                result[rowOffset + col*2 + 1] = rowBytesCb[col*pixelStride];
-            }
-        }
-        return result;
-    }
 
     protected void fillBytes(final Image.Plane[] planes, final byte[][] yuvBytes) {
         // Because of the variable row stride it's not possible to know in
@@ -495,22 +413,16 @@ public class LiveCamera2 extends AppCompatActivity implements
             int pUV = uvRowStride * (j >> 1);
 
             for (int i = 0; i < width; i++) {
-                // pri j=718, i=1280 se sesuje. offset=460800 (za 1 prevelik)
                 int uv_offset = pUV + (i >> 1) * uvPixelStride;
 
-                if (uv_offset < 460800) {
+                // tako verjetno izgubimo nekaj podatkov o sliki
+                // treba poiskat boljši način za pretvarjanje yuv v argb
+                if (uv_offset < uData.length && yp < out.length) {
                     out[yp] = YUV2RGB(0xff & yData[pY + i], 0xff & uData[uv_offset], 0xff & vData[uv_offset]);
                 }
                 yp++;
-                if (i==1279) {
-                    //System.out.println("i");
-                }
-            }
-            if (j==717) {
-                //System.out.println("hopla");
             }
         }
-        //System.out.println("ka bo kej");
     }
 
     private static int YUV2RGB(int y, int u, int v) {
@@ -545,14 +457,10 @@ public class LiveCamera2 extends AppCompatActivity implements
         Bitmap blurBitmap = detect(rotateBitmap(rgbFrameBitmap, 90));
 
         // ne dela
-        runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable() {
             public void run() {
-                imageView.setImageBitmap(rgbFrameBitmap);
+                imageView.setImageBitmap(blurBitmap);
                 imageView.setVisibility(View.VISIBLE);
-
-                // to ni v redu
-                //Drawable d = new BitmapDrawable(getResources(), blurBitmap);
-                //mPreviewView.setBackgroundDrawable(d);
             }
         });
         postInferenceCallback.run();

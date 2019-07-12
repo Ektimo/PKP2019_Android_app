@@ -9,6 +9,9 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.renderscript.ScriptIntrinsicResize;
+import android.renderscript.Type;
+
 
 import java.util.List;
 
@@ -26,7 +29,12 @@ public class BlurFaces {
 
             Bitmap blurBitmap = blurBitmap(context, croppedBitmap);
 
+            Bitmap superBlurBitmap = blurResize(context, blurBitmap);
+
             // vrne frame z zablurabim obrazom
+            // opcija za dodatno bluranje
+            // canvas.drawBitmap(superBlurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
+
             canvas.drawBitmap(blurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
         }
         return bmOverlay;
@@ -77,6 +85,40 @@ public class BlurFaces {
 
         return outBitmap;
 
+    }
+
+    // ne dela še najboljše
+    private static final float BITMAP_SCALE = 0.7f;
+    private static final float RESIZE_SCALE = 1.f/5.f;
+    private static RenderScript rs;
+
+    public static Bitmap blurResize(Context context, Bitmap image) {
+        int width = Math.round(image.getWidth() * BITMAP_SCALE);
+        int height = Math.round(image.getHeight() * BITMAP_SCALE);
+
+        Bitmap inputBitmap = Bitmap.createScaledBitmap(image, width, height, false);
+        Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
+
+        if (rs == null) {
+            // Creating a RS context is expensive, better reuse it.
+            rs = RenderScript.create(context);
+        }
+        Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
+        Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
+
+        Type t = Type.createXY(rs, tmpIn.getElement(),  (int) (width*RESIZE_SCALE),  (int) (height*RESIZE_SCALE));
+        Allocation tmpScratch = Allocation.createTyped(rs, t);
+
+        ScriptIntrinsicResize theIntrinsic = ScriptIntrinsicResize.create(rs);
+        // Resize the original img down.
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach_bicubic(tmpScratch);
+        // Resize smaller img up.
+        theIntrinsic.setInput(tmpScratch);
+        theIntrinsic.forEach_bicubic(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+
+        return outputBitmap;
     }
 /*    private static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int x1, int  y1, int x2, int  y2) {
         Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
