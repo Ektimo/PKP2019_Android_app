@@ -33,15 +33,13 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn2;
-    //private Button btn4;
-    private Button btn3;
-    private Button btn5;
+    private Button recordVideo;
+    private Button loadVideo;
+    private Button videoLive;
     private VideoView videoView;
     private static final String VIDEO_DIRECTORY = "/anonai";
-    protected static int GALLERY = 1, CAMERA = 2;
-    protected static int LIVE_CAMERA = 3;
-    public static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    protected static int GALLERY = 1, CAMERA = 2, LIVE_CAMERA = 3;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,27 +48,25 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        btn2 = (Button) findViewById(R.id.button2);
-        btn3 = (Button) findViewById(R.id.button3);
-        //btn4 = (Button) findViewById(R.id.button4);
-        btn5 = (Button) findViewById(R.id.button5);
-        //videoView = (VideoView) findViewById(R.id.vv);
+        recordVideo = (Button) findViewById(R.id.button2);
+        loadVideo = (Button) findViewById(R.id.button3);
+        videoLive = (Button) findViewById(R.id.button5);
 
-        btn2.setOnClickListener(new View.OnClickListener() {
+        recordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takeVideoFromCamera();
             }
         });
 
-        btn3.setOnClickListener(new View.OnClickListener() {
+        loadVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseVideoFromGallery();
             }
         });
 
-        btn5.setOnClickListener(new View.OnClickListener() {
+        videoLive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startLiveDetection();
@@ -78,17 +74,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /* Gumb za prenos modela
-        btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPermissionGranted()){
-                try {loadModel();}
-                catch (Exception e){
-                    System.out.println(e);
-                }}
-            }
-        });*/
 
     }
 
@@ -127,15 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*private void loadModel() throws IOException {
-        if (isConnectingToInternet()) {
-            new DownloadTask(MainActivity.this, btn4, this.downloadLabels);
-            new DownloadTask(MainActivity.this, btn4, this.downloadModel);
-        }
-        else
-            Toast.makeText(MainActivity.this, "Oops!! There is no internet connection. Please enable internet connection and try again.", Toast.LENGTH_SHORT).show();
-
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,29 +193,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
     }
 
-
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-
-            case 1: {
-
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
-                    try {
-                        loadModel();
-                    } catch (Exception e) {
-                        System.out.println(e);
-                    }
-                    ;
-                } else {
-                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

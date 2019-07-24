@@ -34,14 +34,10 @@ public class VideoPlay extends AppCompatActivity {
         getSupportActionBar().hide();
 
         Intent intent = getIntent();
-        Uri contentURI = intent.getParcelableExtra("videoURI1");
-
-        String fullVideoName = contentURI.toString();
-
 
         String videoName = intent.getStringExtra("videoName");
 
-        //File mydir = this.getDir("Videos", this.MODE_PRIVATE);
+
         File root = new File(Environment.getExternalStorageDirectory() + "/anonai");
         File mydir = new File(root.getAbsolutePath());
 

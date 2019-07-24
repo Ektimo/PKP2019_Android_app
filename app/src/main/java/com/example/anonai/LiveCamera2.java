@@ -1,5 +1,6 @@
 package com.example.anonai;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
@@ -57,8 +59,8 @@ public class LiveCamera2 extends AppCompatActivity implements
     private HandlerThread mThreadHandler;
 
     // size of images captured in ImageReader Callback
-    private int mImageWidth = 1080; //1920
-    private int mImageHeight = 1920; //1080
+    private int mImageWidth = 1080; //getScreenWidth()
+    private int mImageHeight = 1920; //getScreenHeight()
 
     private int[] rgbBytes = null;
     private boolean isProcessingFrame = false;
@@ -74,7 +76,6 @@ public class LiveCamera2 extends AppCompatActivity implements
 
     static final int kMaxChannelValue = 262143;
 
-
     //surface
     private Surface surface;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -89,6 +90,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         initLooper();
 
         initTensorFlowAndLoadModel();
+       // System.out.println(getScreenWidth() +" "+ getScreenHeight());
 
     }
 
@@ -193,7 +195,9 @@ public class LiveCamera2 extends AppCompatActivity implements
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width,
                                             int height) {
 
+
     }
+
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -212,6 +216,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         public void onOpened(CameraDevice camera) {
             try {
                 mCamera = camera;
+                setDisplayOrientation(mCamera,90);
                 startPreview(mCamera);
             } catch (CameraAccessException e) {
                 e.printStackTrace();
@@ -455,7 +460,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         rgbFrameBitmap = Bitmap.createBitmap(mImageWidth, mImageHeight, Bitmap.Config.ARGB_8888);
         rgbFrameBitmap.setPixels(a, 0, mImageWidth, 0, 0, mImageWidth, mImageHeight);
         Bitmap blurBitmap = detect(rotateBitmap(rgbFrameBitmap, 90));
-
+        //Bitmap blurBitmap = detect(rgbFrameBitmap);
         // ne dela
         runOnUiThread(new Runnable() {
             public void run() {
@@ -549,4 +554,24 @@ public class LiveCamera2 extends AppCompatActivity implements
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+    protected void setDisplayOrientation(CameraDevice camera, int angle){
+        Method downPolymorphic;
+        try
+        {
+            downPolymorphic = camera.getClass().getMethod("setDisplayOrientation", new Class[] { int.class });
+            if (downPolymorphic != null)
+                downPolymorphic.invoke(camera, new Object[] { angle });
+        }
+        catch (Exception e1)
+        {
+        }
+    }
+
 }

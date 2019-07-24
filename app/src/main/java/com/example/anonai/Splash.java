@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 
 public class Splash extends AppCompatActivity {
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

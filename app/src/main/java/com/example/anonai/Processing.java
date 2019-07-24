@@ -50,7 +50,6 @@ public class Processing extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processing);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        TextView textView = findViewById(R.id.processing_text);
         setSupportActionBar(toolbar);
         ProgressBar pBar = findViewById(R.id.pBar);
 
@@ -65,7 +64,6 @@ public class Processing extends AppCompatActivity {
 
         final Context context = getApplicationContext();
 
-        //FFmpeg.execute("-i /storage/emulated/0/DCIM/Camera/VID_20190423_124214.mp4 -ss 00:00:03.000 -vframes 1 /storage/emulated/0/DCIM/Camera/thumb.jpg");
 
         try {
             //path of the video of which you want frames
@@ -101,17 +99,14 @@ public class Processing extends AppCompatActivity {
                     file.setReadable(true, false);
                     String path = file.getAbsolutePath();
                     out[0] = NIOUtils.writableFileChannel(path);
-                    // for Android use: AndroidSequenceEncoder
+
                     final AndroidSequenceEncoder encoder = new AndroidSequenceEncoder(out[0], Rational.R(numeroFrameCaptured, (duration_millisec / 1000)));
 
-                    //tfliteOptions.setNumThreads(10);
+
 
 
                     for (int i = 0; i < numeroFrameCaptured; i++) {
-                    //for (int i = 0; i < frames_per_second*duration_millisec/1000; i++) {
                         frameList.add(retriever.getFrameAtIndex(i * NOF / numeroFrameCaptured));
-                        //long t = i*1000*1000/frames_per_second;
-                        //frameList.add(retriever.getScaledFrameAtTime(t, MediaMetadataRetriever.OPTION_CLOSEST,INPUT_SIZE,INPUT_SIZE));
                         System.out.println(i);
 
                         Bitmap bitmap = frameList.get(i);
@@ -235,20 +230,6 @@ public class Processing extends AppCompatActivity {
             }
         }
         return result;
-    }
-
-    public String  getPath(Uri uri) {
-        String[] projection = { MediaStore.Video.Media.DATA };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else
-            return null;
     }
 
     public static List<Integer> popraviCords(RectF cords, int startSizeX, int startSizeY, int endSize){

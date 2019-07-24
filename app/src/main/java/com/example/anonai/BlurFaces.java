@@ -64,7 +64,7 @@ public class BlurFaces {
 
 
 //Set the radius of the blur
-        blurScript.setRadius(25.f);
+        blurScript.setRadius(50.f);
 
 
 //Perform the Renderscript
@@ -120,11 +120,5 @@ public class BlurFaces {
 
         return outputBitmap;
     }
-/*    private static Bitmap overlay(Bitmap bmp1, Bitmap bmp2, int x1, int  y1, int x2, int  y2) {
-        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(bmp1, new Matrix(), null);
-        canvas.drawBitmap(bmp2, null, new Rect(x1, y1, x2, y2), null);
-        return bmOverlay;
-    }*/
+
 }
