@@ -25,17 +25,16 @@ public class BlurFaces {
             List<Integer> cord = cords.get(i);
             Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, cord.get(0), cord.get(1), cord.get(2) -cord.get(0), cord.get(3) - cord.get(1));
 
-            //bluranje slike
+            //blur image
 
             Bitmap blurBitmap = blurBitmap(context, croppedBitmap);
 
             Bitmap superBlurBitmap = blurResize(context, blurBitmap);
 
-            // vrne frame z zablurabim obrazom
-            // opcija za dodatno bluranje
-            // canvas.drawBitmap(superBlurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
 
-            canvas.drawBitmap(blurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
+            canvas.drawBitmap(superBlurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
+
+            //canvas.drawBitmap(blurBitmap, null, new Rect(cord.get(0), cord.get(1), cord.get(2), cord.get(3)), null);
         }
         return bmOverlay;
 

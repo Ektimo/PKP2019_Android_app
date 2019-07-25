@@ -264,10 +264,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         List<Surface> outputSurfaces = new ArrayList<>();
         outputSurfaces.add(mImageReader.getSurface());
 
-        /*camera.createCaptureSession(
-                Arrays.asList(surface, mImageReader.getSurface()),
-                mSessionStateCallback, mHandler);
-                */
+
         camera.createCaptureSession(outputSurfaces, mSessionStateCallback, mHandler);
     }
 
@@ -375,17 +372,6 @@ public class LiveCamera2 extends AppCompatActivity implements
         super.onPause();
     }
 
-    private static int convertYUVtoRGB(int y, int u, int v) {
-        int r,g,b;
-
-        r = y + (int)(1.402f*v);
-        g = y - (int)(0.344f*u +0.714f*v);
-        b = y + (int)(1.772f*u);
-        r = r>255? 255 : r<0 ? 0 : r;
-        g = g>255? 255 : g<0 ? 0 : g;
-        b = b>255? 255 : b<0 ? 0 : b;
-        return 0xff000000 | (b<<16) | (g<<8) | r;
-    }
 
 
     protected void fillBytes(final Image.Plane[] planes, final byte[][] yuvBytes) {
@@ -401,7 +387,6 @@ public class LiveCamera2 extends AppCompatActivity implements
     }
 
 
-    // dela za prvo silo, ne vem zakaj je treba preskociti nekaj indeksov da se ne sesuje
     public static void convertYUV420ToARGB8888(
             byte[] yData,
             byte[] uData,
@@ -420,8 +405,7 @@ public class LiveCamera2 extends AppCompatActivity implements
             for (int i = 0; i < width; i++) {
                 int uv_offset = pUV + (i >> 1) * uvPixelStride;
 
-                // tako verjetno izgubimo nekaj podatkov o sliki
-                // treba poiskat boljši način za pretvarjanje yuv v argb
+
                 if (uv_offset < uData.length && yp < out.length) {
                     out[yp] = YUV2RGB(0xff & yData[pY + i], 0xff & uData[uv_offset], 0xff & vData[uv_offset]);
                 }
@@ -460,8 +444,7 @@ public class LiveCamera2 extends AppCompatActivity implements
         rgbFrameBitmap = Bitmap.createBitmap(mImageWidth, mImageHeight, Bitmap.Config.ARGB_8888);
         rgbFrameBitmap.setPixels(a, 0, mImageWidth, 0, 0, mImageWidth, mImageHeight);
         Bitmap blurBitmap = detect(rotateBitmap(rgbFrameBitmap, 90));
-        //Bitmap blurBitmap = detect(rgbFrameBitmap);
-        // ne dela
+
         runOnUiThread(new Runnable() {
             public void run() {
                 imageView.setImageBitmap(blurBitmap);
